@@ -6,7 +6,7 @@ function Footer() {
         <div>
             <Container>
                 <Row>
-                    <Col className='text-center py-3'>Copyright &copy; Heat</Col>
+                    <Col className='text-center py-3'>Copyright &copy; Heater</Col>
                 </Row>
 
             </Container>
