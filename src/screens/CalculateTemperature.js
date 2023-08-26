@@ -4,6 +4,7 @@ import data from './data.json'; // Replace with your JSON data
 
 const CustomTable = () => {
     const [rows, setRows] = useState([]);
+    const [result, setResult] = useState([]);
 
     const handleLayerChange = (index, selectedLayer) => {
         const newRows = [...rows];
@@ -22,6 +23,66 @@ const CustomTable = () => {
 
     const addRowWithDropdown = (layer) => {
         setRows([...rows, { layer, selectedLayer: '', thickness: '', lambda: '', cost: '' }]);
+    };
+
+    const handleCalculate = async () => {
+        const requestData = {
+            data_building_partition: rows,
+            heat_information: {
+                inside_temperature: '',
+                outside_temperature: -20,
+                inside_heater_power: 80,
+                outside_heater_power: '',
+            },
+            method: 'finite_element_method',
+        };
+
+        console.log(requestData)
+        const response = await fetch('http://127.0.0.1:8000/api/calculate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        })
+        if (response.ok) {
+            const temp = await response.json();
+            // Handle the calculated result (update UI or show a message)
+            console.log()
+            setResult(JSON.stringify(temp, null, 2))
+        }
+        // setResult(data)
+        // Prepare data to send to the API
+        // const requestData = {
+        //     data_building_partition: rows,  // Sending the rows as input data
+        //     heat_information: {/* ... */ },   // Prepare your heat information
+        //     method: 'your_method_name',      // Specify the calculation method
+        // };
+
+        // try {
+        //     const response = await fetch('/api/calculate', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify(requestData),
+        //     });
+
+        //     if (response.ok) {
+        //         // const result = await response.json();
+        //         // Handle the calculated result (update UI or show a message)
+        //         const result = "CALCULATE"
+        //         setResult(result)
+        //     } else {
+        //         // Handle error response
+        //         const result = "Handle error response"
+        //         setResult(result)
+        //     }
+        // } catch (error) {
+        //     // Handle fetch error
+        //     const result = "Handle fetch error"
+        //     setResult(result)
+        // }
     };
 
     const dropdownOptions = data.map(item => item.layer); // Extract layer names from data
@@ -71,6 +132,8 @@ const CustomTable = () => {
             </Table>
             <Button onClick={() => addRowWithDropdown('Inner Wall')}>Add Row with Dropdown</Button>
             <Button onClick={() => addRowWithDropdown('Outer Wall')}>Add Row with Dropdown</Button>
+            <Button onClick={handleCalculate}>Calculate</Button>
+            <div>{result}</div>
         </div>
     );
 };
