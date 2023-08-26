@@ -34,10 +34,10 @@ const CustomTable = () => {
         const requestData = {
             data_building_partition: rows,
             heat_information: {
-                inside_temperature: selectedOption === 'heat' ? '' : inputValue,
+                inside_temperature: selectedOption === 'heat' ? null : inputValue,
                 outside_temperature: selectedZone, // Use the selected temperature
-                inside_heater_power: selectedOption === 'heat' ? inputValue : '',
-                outside_heater_power: '',
+                inside_heater_power: selectedOption === 'heat' ? inputValue : null,
+                outside_heater_power: null,
             },
             method: 'finite_element_method',
         };
@@ -50,12 +50,11 @@ const CustomTable = () => {
             },
             body: JSON.stringify(requestData),
         })
-        console.log(requestData)
         if (response.ok) {
             const temp = await response.json();
             // Handle the calculated result (update UI or show a message)
 
-            setResult(JSON.stringify(temp, null, 2))
+            setResult(temp);
         } else {
             // Handle error response
             const result = "Handle error response"
@@ -102,12 +101,12 @@ const CustomTable = () => {
         }
         return 'Enter value';
     };
-
+    console.log(result.thickness)
     const scatterData = [
         {
-            x: [1, 2, 3, 4],
-            y: [10, 11, 9, 12],
-            mode: 'markers',
+            x: result.thickness,
+            y: result.temp,
+            mode: 'markers+lines',
             type: 'scatter',
         },
     ];
@@ -190,7 +189,7 @@ const CustomTable = () => {
             </Table>
             <Button onClick={() => addRowWithDropdown()}>Add Layer</Button>
             <Button onClick={handleCalculate}>Calculate</Button>
-            <div>{result}</div>
+            {/* <div>{result}</div> */}
 
             <Plot
                 data={scatterData}
