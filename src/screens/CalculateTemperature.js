@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Form, Dropdown } from 'react-bootstrap';
+import { Table, Button, Form, Dropdown, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
 import data from './data.json'; // Replace with your JSON data
 
 const CustomTable = () => {
@@ -74,6 +74,19 @@ const CustomTable = () => {
         setSelectedZone(options.find(option => option.value === eventKey));
     };
 
+
+    const radioOptions = [
+        { label: 'Heat', value: "Heat" },
+        { label: 'Temp', value: 'Temp' },
+    ];
+
+    const [selectedOption, setSelectedOption] = useState(null);
+
+    const handleRadioChange = (value) => {
+        console.log(value);
+        setSelectedOption(value);
+    };
+
     return (
         <div>
             <Dropdown onSelect={handleDropdownSelect}>
@@ -92,6 +105,22 @@ const CustomTable = () => {
             <div>
                 {selectedZone && <p>You selected: {selectedZone.value}</p>}
             </div>
+
+            <ToggleButtonGroup type="radio" name="options" value={selectedOption}>
+                {radioOptions.map((option) => (
+                    <ToggleButton
+                        key={option.value}
+                        value={option.value}
+                        variant="outline-primary"
+                        onChange={() => handleRadioChange(option.value)}
+                    >
+                        {option.label}
+                    </ToggleButton>
+                ))}
+            </ToggleButtonGroup>
+            <p>Selected option: {selectedOption}</p>
+
+
             <Table striped bordered hover variant="light">
                 <thead>
                     <tr>
