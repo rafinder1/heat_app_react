@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Table, Button, Form, Dropdown, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
+import { Table, Button, Form, Dropdown, ButtonGroup } from 'react-bootstrap';
+import Plot from 'react-plotly.js';
 import data from './data.json'; // Replace with your JSON data
 
 const CustomTable = () => {
@@ -69,23 +70,41 @@ const CustomTable = () => {
 
 
     const [selectedZone, setSelectedZone] = useState(null);
+    const [inputValue, setInputValue] = useState('');
 
-    const handleDropdownSelect = (eventKey, event) => {
+    const handleDropdownSelect = (eventKey) => {
         setSelectedZone(options.find(option => option.value === eventKey));
     };
 
 
-    const radioOptions = [
-        { label: 'Heat', value: "Heat" },
-        { label: 'Temp', value: 'Temp' },
-    ];
-
     const [selectedOption, setSelectedOption] = useState(null);
 
     const handleRadioChange = (value) => {
-        console.log(value);
         setSelectedOption(value);
+        setInputValue('');
     };
+
+    const handleInputChange = (event) => {
+        setInputValue(event.target.value);
+    };
+
+    const getPlaceholderText = () => {
+        if (selectedOption === 'heat') {
+            return 'Power Heater';
+        } else if (selectedOption === 'temp') {
+            return 'Temperature';
+        }
+        return 'Enter value';
+    };
+
+    const scatterData = [
+        {
+            x: [1, 2, 3, 4],
+            y: [10, 11, 9, 12],
+            mode: 'markers',
+            type: 'scatter',
+        },
+    ];
 
     return (
         <div>
@@ -106,21 +125,20 @@ const CustomTable = () => {
                 {selectedZone && <p>You selected: {selectedZone.value}</p>}
             </div>
 
-            <ToggleButtonGroup type="radio" name="options" value={selectedOption}>
-                {radioOptions.map((option) => (
-                    <ToggleButton
-                        key={option.value}
-                        value={option.value}
-                        variant="outline-primary"
-                        onChange={() => handleRadioChange(option.value)}
-                    >
-                        {option.label}
-                    </ToggleButton>
-                ))}
-            </ToggleButtonGroup>
-            <p>Selected option: {selectedOption}</p>
+            <ButtonGroup aria-label="Basic example">
+                <Button onClick={() => handleRadioChange('heat')}>Heat</Button>
+                <Button onClick={() => handleRadioChange('temp')}>Temp</Button>
+            </ButtonGroup>
 
-
+            <Form.Group controlId="inputField">
+                {/* <Form.Label>Input Field</Form.Label> */}
+                <Form.Control
+                    type="number"
+                    placeholder={getPlaceholderText()}
+                    value={inputValue}
+                    onChange={handleInputChange}
+                />
+            </Form.Group>
             <Table striped bordered hover variant="light">
                 <thead>
                     <tr>
@@ -166,6 +184,11 @@ const CustomTable = () => {
             <Button onClick={() => addRowWithDropdown('Outer Wall')}>Add Row with Dropdown</Button>
             <Button onClick={handleCalculate}>Calculate</Button>
             <div>{result}</div>
+
+            <Plot
+                data={scatterData}
+                layout={{ title: 'Scatter Plot' }}
+            />
         </div>
     );
 };
