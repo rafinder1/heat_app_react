@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Button, Form } from 'react-bootstrap';
+import { Table, Button, Form, Dropdown } from 'react-bootstrap';
 import data from './data.json'; // Replace with your JSON data
 
 const CustomTable = () => {
@@ -50,45 +50,48 @@ const CustomTable = () => {
             // Handle the calculated result (update UI or show a message)
             console.log()
             setResult(JSON.stringify(temp, null, 2))
+        } else {
+            // Handle error response
+            const result = "Handle error response"
+            setResult(result)
         }
-        // setResult(data)
-        // Prepare data to send to the API
-        // const requestData = {
-        //     data_building_partition: rows,  // Sending the rows as input data
-        //     heat_information: {/* ... */ },   // Prepare your heat information
-        //     method: 'your_method_name',      // Specify the calculation method
-        // };
-
-        // try {
-        //     const response = await fetch('/api/calculate', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(requestData),
-        //     });
-
-        //     if (response.ok) {
-        //         // const result = await response.json();
-        //         // Handle the calculated result (update UI or show a message)
-        //         const result = "CALCULATE"
-        //         setResult(result)
-        //     } else {
-        //         // Handle error response
-        //         const result = "Handle error response"
-        //         setResult(result)
-        //     }
-        // } catch (error) {
-        //     // Handle fetch error
-        //     const result = "Handle fetch error"
-        //     setResult(result)
-        // }
     };
 
     const dropdownOptions = data.map(item => item.layer); // Extract layer names from data
 
+    const options = [
+        { label: 'Zone I - External Temperature θe = -16 °C', value: 'Temperature: -16°C' },
+        { label: 'Zone II - External Temperature θe = -18 °C', value: 'Temperature: -18°C' },
+        { label: 'Zone III - External Temperature θe = -20 °C', value: 'Temperature: -20°C' },
+        { label: 'Zone IV - External Temperature θe = -22 °C', value: 'Temperature: -22°C' },
+        { label: 'Zone V - External Temperature θe = -24 °C', value: 'Temperature: -24°C' },
+    ];
+
+
+    const [selectedZone, setSelectedZone] = useState(null);
+
+    const handleDropdownSelect = (eventKey, event) => {
+        setSelectedZone(options.find(option => option.value === eventKey));
+    };
+
     return (
         <div>
+            <Dropdown onSelect={handleDropdownSelect}>
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    {selectedZone ? selectedZone.value : 'Select Zone'}
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                    {options.map(option => (
+                        <Dropdown.Item key={option.value} eventKey={option.value}>
+                            {option.label}
+                        </Dropdown.Item>
+                    ))}
+                </Dropdown.Menu>
+            </Dropdown>
+            <div>
+                {selectedZone && <p>You selected: {selectedZone.value}</p>}
+            </div>
             <Table striped bordered hover variant="light">
                 <thead>
                     <tr>
