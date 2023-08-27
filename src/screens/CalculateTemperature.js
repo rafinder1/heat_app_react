@@ -1,26 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Button, Form, Dropdown, ButtonGroup } from 'react-bootstrap';
 import Plot from 'react-plotly.js';
-import data from './data.json'; // Replace with your JSON data
 
 const CustomTable = () => {
+    const [data, setData] = useState([]);
     const [rows, setRows] = useState([]);
     const [result, setResult] = useState([]);
     const [selectedZone, setSelectedZone] = useState(null);
     const [inputValue, setInputValue] = useState();
     const [selectedOption, setSelectedOption] = useState('heat');
+    const [todoList, setTodoList] = useState([
+        "Select Zone",
+        "Select Heater or Temperature",
+        "Add Layer"
+    ]);
+
+    const fetchData = async () => {
+
+        const response = await fetch('http://127.0.0.1:8000/api/materials', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const jsonData = await response.json();
+        setData(jsonData.materials);
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const handleLayerChange = (index, selectedLayer) => {
         const newRows = [...rows];
         newRows[index].name_layer = selectedLayer;
 
         // Fetch corresponding data from JSON and update the row
-        const matchingData = data.find(item => item.name_layer === selectedLayer);
+        const matchingData = data.find(item => item.fields.name_layer === selectedLayer);
+
         if (matchingData) {
-            newRows[index].type_layer = matchingData.type_layer;
-            newRows[index].thickness = parseFloat(matchingData.thickness);
-            newRows[index].thermal_conductivity = parseFloat(matchingData.thermal_conductivity);
-            newRows[index].cost = parseFloat(matchingData.cost);
+            console.log(matchingData)
+            newRows[index].type_layer = matchingData.fields.type_layer;
+            newRows[index].thickness = matchingData.fields.thickness;
+            newRows[index].thermal_conductivity = matchingData.fields.thermal_conductivity;
+            newRows[index].cost = matchingData.fields.cost;
         }
 
         setRows(newRows);
@@ -28,6 +51,9 @@ const CustomTable = () => {
 
     const addRowWithDropdown = (name_layer) => {
         setRows([...rows, { type_layer: '', name_layer: '', thickness: '', thermal_conductivity: '', cost: '' }]);
+
+        const updatedList = todoList.filter(item => item !== "Add Layer");
+        setTodoList(updatedList);
     };
 
     const handleCalculate = async () => {
@@ -61,8 +87,8 @@ const CustomTable = () => {
             setResult(result)
         }
     };
-
-    const dropdownOptions = data.map(item => item.name_layer); // Extract layer names from data
+    const dropdownOptions = data.map(item => item.fields.name_layer);
+    // const dropdownOptions = [];
 
     const options = [
         { label: 'Zone I - External Temperature θe = -16 °C', value: 'Temperature: -16°C' },
@@ -79,6 +105,9 @@ const CustomTable = () => {
         const selectedTemperature = parseInt(eventKey.split(': ')[1]); // Extract temperature from "Temperature: -16°C"
 
         setSelectedZone(selectedTemperature);
+
+        const updatedList = todoList.filter(item => item !== "Select Zone");
+        setTodoList(updatedList);
     };
 
 
@@ -90,7 +119,31 @@ const CustomTable = () => {
     };
 
     const handleInputChange = (event) => {
-        setInputValue(parseFloat(event.target.value));
+        const inputValue = event.target.value;
+
+        if (inputValue !== '') {
+            const parsedValue = parseFloat(inputValue);
+
+            if (!isNaN(parsedValue)) {
+                setInputValue(parsedValue);
+
+                // If inputValue is a valid number (not NaN), remove "Select Heater or Temperature" from the todo list
+                const updatedList = todoList.filter(item => item !== "Select Heater or Temperature");
+                setTodoList(updatedList);
+            } else {
+                // If inputValue cannot be parsed as a valid number, keep "Select Heater or Temperature" in the todo list
+                setInputValue('');
+                if (!todoList.includes("Select Heater or Temperature")) {
+                    setTodoList([...todoList, "Select Heater or Temperature"]);
+                }
+            }
+        } else {
+            // If inputValue is empty, keep "Select Heater or Temperature" in the todo list
+            setInputValue('');
+            if (!todoList.includes("Select Heater or Temperature")) {
+                setTodoList([...todoList, "Select Heater or Temperature"]);
+            }
+        }
     };
 
     const getPlaceholderText = () => {
@@ -101,7 +154,7 @@ const CustomTable = () => {
         }
         return 'Enter value';
     };
-    console.log(result.thickness)
+
     const scatterData = [
         {
             x: result.thickness,
@@ -146,6 +199,13 @@ const CustomTable = () => {
                     onChange={handleInputChange}
                 />
             </Form.Group>
+
+            <img
+                src={`${process.env.PUBLIC_URL}/heater_choose.png`} // Use the PUBLIC_URL to reference the image
+                alt="Heater Choose"
+                className="img-fluid"
+            />
+
             <Table striped bordered hover variant="light">
                 <thead>
                     <tr>
@@ -190,6 +250,16 @@ const CustomTable = () => {
             <Button onClick={() => addRowWithDropdown()}>Add Layer</Button>
             <Button onClick={handleCalculate}>Calculate</Button>
             {/* <div>{result}</div> */}
+
+            <div>
+                <h2>ToDo List</h2>
+                <ul>
+                    {todoList.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
+                </ul>
+                {todoList.length === 0 && <p>You can calculate</p>}
+            </div>
 
             <Plot
                 data={scatterData}
