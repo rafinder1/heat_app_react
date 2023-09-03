@@ -6,7 +6,7 @@ const CustomTable = () => {
     const [data, setData] = useState([]);
     const [rows, setRows] = useState([]);
     const [result, setResult] = useState([]);
-    const [selectedZone, setSelectedZone] = useState(null);
+    const [selectedTemp, setSelectedZone] = useState(null);
     const [inputValue, setInputValue] = useState();
     const [selectedOption, setSelectedOption] = useState('heat');
     const [todoList, setTodoList] = useState([
@@ -61,7 +61,7 @@ const CustomTable = () => {
             data_building_partition: rows,
             heat_information: {
                 inside_temperature: selectedOption === 'heat' ? null : inputValue,
-                outside_temperature: selectedZone, // Use the selected temperature
+                outside_temperature: selectedTemp, // Use the selected temperature
                 inside_heater_power: selectedOption === 'heat' ? inputValue : null,
                 outside_heater_power: null,
             },
@@ -102,6 +102,7 @@ const CustomTable = () => {
 
 
     const handleDropdownSelect = (eventKey) => {
+
         const selectedTemperature = parseInt(eventKey.split(': ')[1]); // Extract temperature from "Temperature: -16°C"
 
         setSelectedZone(selectedTemperature);
@@ -164,13 +165,14 @@ const CustomTable = () => {
         },
     ];
 
-
+    console.log(selectedTemp)
     return (
         <div>
-            <Dropdown onSelect={handleDropdownSelect}>
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    {/* {-16 ? (-16, console.log(123)) : 'Select Zone'} */}
-                    {'Select Zone'}
+            <Dropdown onSelect={handleDropdownSelect} >
+                <Dropdown.Toggle variant="light" style={{ width: '335px' }}>
+                    {selectedTemp !== null
+                        ? `external temperature: ${selectedTemp} °C`
+                        : 'Select Temperature'}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
@@ -181,9 +183,7 @@ const CustomTable = () => {
                     ))}
                 </Dropdown.Menu>
             </Dropdown>
-            <div>
-                {selectedZone && <p>You selected: {selectedZone}</p>}
-            </div>
+
 
             <ButtonGroup aria-label="Basic example">
                 <Button onClick={() => handleRadioChange('heat')}>Heat</Button>
