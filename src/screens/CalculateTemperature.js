@@ -13,7 +13,7 @@ const CustomTable = () => {
     const [inputValue, setInputValue] = useState();
     const [selectedOption, setSelectedOption] = useState('heat');
     const [todoList, setTodoList] = useState([
-        "Select Zone",
+        "Select a Climate Zone",
         "Select Heater or Temperature",
         "Add Layer"
     ]);
@@ -110,7 +110,7 @@ const CustomTable = () => {
 
         setSelectedZone(selectedTemperature);
 
-        const updatedList = todoList.filter(item => item !== "Select Zone");
+        const updatedList = todoList.filter(item => item !== "Select a Climate Zone");
         setTodoList(updatedList);
     };
 
@@ -152,9 +152,9 @@ const CustomTable = () => {
 
     const getPlaceholderText = () => {
         if (selectedOption === 'heat') {
-            return 'Power Heater';
+            return 'Power Heater [W/m2]';
         } else if (selectedOption === 'temp') {
-            return 'Temperature';
+            return 'Temperature [°C]';
         }
         return 'Enter value';
     };
@@ -282,66 +282,93 @@ const CustomTable = () => {
                     </Row>
                 </Card.Body>
             </Card>
-            <Table striped bordered hover variant="light">
-                <thead>
-                    <tr>
-                        <th>Type Layer</th>
-                        <th>Name Layer</th>
-                        <th>Thickness [m]</th>
-                        <th>λ [W/mK]</th>
-                        <th>Cost [PLN]</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colSpan={5}>Inner Wall</td>
-                    </tr>
-                    {rows.map((row, index) => (
-                        <tr key={index}>
-                            <td>{row.type_layer}</td>
-                            <td>
-                                <Form.Control
-                                    as="select"
-                                    value={row.selectedLayer}
-                                    onChange={e => handleLayerChange(index, e.target.value)}
-                                >
-                                    <option value="">Select Layer</option>
-                                    {dropdownOptions.map(option => (
-                                        <option key={option} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                </Form.Control>
-                            </td>
-                            <td>{row.thickness}</td>
-                            <td>{row.thermal_conductivity}</td>
-                            <td>{row.cost}</td>
-                        </tr>
-                    ))}
-                    <tr>
-                        <td colSpan={5}>Outer Wall</td>
-                    </tr>
-                </tbody>
-            </Table>
-            <Button onClick={() => addRowWithDropdown()}>Add Layer</Button>
-            <Button onClick={handleCalculate}>Calculate</Button>
-            {/* <div>{result}</div> */}
 
-            <div>
-                <h2>ToDo List</h2>
-                <ul>
-                    {todoList.map((item, index) => (
-                        <li key={index}>{item}</li>
-                    ))}
-                </ul>
-                {todoList.length === 0 && <p>You can calculate</p>}
-            </div>
+            <br />
+            <Card>
+                <Card.Header style={{ textAlign: 'center' }}>
+                    <h3>Layers of Building Partition</h3>
+                </Card.Header>
+                <Card.Body>
+                    <Row>
+                        <div>
+                            <h4>Things ToDo to Calculate the Temperature:</h4>
+                            <ul>
+                                {todoList.map((item, index) => (
+                                    <li key={index}>{item}</li>
+                                ))}
+                            </ul>
+                            {todoList.length === 0 && <p>You can calculate</p>}
+                        </div>
+                    </Row>
+                    <br />
+                    <Row>
+                        <Table striped bordered hover variant="light">
+                            <thead>
+                                <tr>
+                                    <th>Type Layer</th>
+                                    <th>Name Layer</th>
+                                    <th>Thickness [m]</th>
+                                    <th>λ [W/mK]</th>
+                                    <th>Cost [PLN]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colSpan={5}>Inner Wall</td>
+                                </tr>
+                                {rows.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.type_layer}</td>
+                                        <td>
+                                            <Form.Control
+                                                as="select"
+                                                value={row.selectedLayer}
+                                                onChange={e => handleLayerChange(index, e.target.value)}
+                                            >
+                                                <option value="">Select Layer</option>
+                                                {dropdownOptions.map(option => (
+                                                    <option key={option} value={option}>
+                                                        {option}
+                                                    </option>
+                                                ))}
+                                            </Form.Control>
+                                        </td>
+                                        <td>{row.thickness}</td>
+                                        <td>{row.thermal_conductivity}</td>
+                                        <td>{row.cost}</td>
+                                    </tr>
+                                ))}
+                                <tr>
+                                    <td colSpan={5}>Outer Wall</td>
+                                </tr>
+                            </tbody>
+                        </Table>
+                    </Row>
 
-            <Plot
-                data={scatterData}
-                layout={{ title: 'Scatter Plot' }}
-            />
-        </div>
+                    <br />
+
+                    <Row className="d-flex justify-content-center mb-3">
+                        <Button onClick={() => addRowWithDropdown()} style={{ width: '25%', margin: '10px' }}>Add Layer</Button>
+                        <Button onClick={handleCalculate} style={{ width: '25%', margin: '10px' }} variant="success">Calculate</Button>
+                    </Row>
+
+                    <br />
+
+                    <Row>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Plot
+                                data={scatterData}
+                                layout={{
+                                    title: 'Temperature Distribution',
+                                    xaxis: { title: 'Thickness [m]' },
+                                    yaxis: { title: 'Temperature [°C]' },
+                                }}
+                            />
+                        </div>
+                    </Row>
+                </Card.Body>
+            </Card>
+        </div >
     );
 };
 
