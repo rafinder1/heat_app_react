@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Form, Dropdown, ButtonGroup } from 'react-bootstrap';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
 import Plot from 'react-plotly.js';
 
 const CustomTable = () => {
@@ -165,47 +168,120 @@ const CustomTable = () => {
         },
     ];
 
-    console.log(selectedTemp)
     return (
         <div>
-            <Dropdown onSelect={handleDropdownSelect} >
-                <Dropdown.Toggle variant="light" style={{ width: '335px' }}>
-                    {selectedTemp !== null
-                        ? `external temperature: ${selectedTemp} °C`
-                        : 'Select Temperature'}
-                </Dropdown.Toggle>
+            <Card>
+                <Card.Header style={{ textAlign: 'center' }}>
+                    <h3>Basic Partition Data</h3>
+                </Card.Header>
+                <Card.Body>
 
-                <Dropdown.Menu>
-                    {options.map(option => (
-                        <Dropdown.Item key={option.value} eventKey={option.value}>
-                            {option.label}
-                        </Dropdown.Item>
-                    ))}
-                </Dropdown.Menu>
-            </Dropdown>
+                    <Row>
+                        <Col>
+                            <h5>Select a Climate Zone:</h5>
+                            <Dropdown onSelect={handleDropdownSelect}>
+                                <Dropdown.Toggle variant="light" style={{ width: '100%' }}>
+                                    {selectedTemp !== null
+                                        ? `external temperature: ${selectedTemp} °C`
+                                        : 'Select Temperature'}
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu style={{ width: '100%' }}>
+                                    {options.map(option => (
+                                        <Dropdown.Item
+                                            key={option.value}
+                                            eventKey={option.value}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            {option.label}
+                                        </Dropdown.Item>
+                                    ))}
+                                </Dropdown.Menu>
+                            </Dropdown>
+                            <br />
+
+                            <h5>Select the Conditions in the Building Partition:</h5>
 
 
-            <ButtonGroup aria-label="Basic example">
-                <Button onClick={() => handleRadioChange('heat')}>Heat</Button>
-                <Button onClick={() => handleRadioChange('temp')}>Temp</Button>
-            </ButtonGroup>
+                            <ButtonGroup aria-label="Basic example" vertical className="d-flex align-items-center">
+                                <Button onClick={() => handleRadioChange('heat')} variant="light" style={{ background: 'white' }}>
+                                    <img src="/dirichlet-neumann.jpg" alt="Heat" width="400" height="242" />
+                                </Button>
+                                <Button onClick={() => handleRadioChange('temp')} variant="light" style={{ background: 'white' }}>
+                                    <img src="/dirichlet-dirichlet.jpg" alt="Temp" width="400" height="242" />
+                                </Button>
+                            </ButtonGroup>
+                        </Col>
 
-            <Form.Group controlId="inputField">
-                {/* <Form.Label>Input Field</Form.Label> */}
-                <Form.Control
-                    type="number"
-                    placeholder={getPlaceholderText()}
-                    value={inputValue}
-                    onChange={handleInputChange}
-                />
-            </Form.Group>
-
-            <img
-                src={`${process.env.PUBLIC_URL}/heater_choose.png`} // Use the PUBLIC_URL to reference the image
-                alt="Heater Choose"
-                className="img-fluid"
-            />
-
+                        <Col>
+                            <h5>Heated Area (height 2.5 m)</h5>
+                            <Table striped bordered hover variant="light">
+                                <thead>
+                                    <tr>
+                                        <th>Radiator power</th>
+                                        <th>* 80 W/m<sup>2</sup></th>
+                                        <th>** 120 W/m<sup>2</sup></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>250 W</td>
+                                        <td>3 m<sup>2</sup></td>
+                                        <td>2 m<sup>2</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td>500 W</td>
+                                        <td>4-6 m<sup>2</sup></td>
+                                        <td>4 m<sup>2</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td>750 W</td>
+                                        <td>7-9 m<sup>2</sup></td>
+                                        <td>5-6 m<sup>2</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1000 W</td>
+                                        <td>10-12 m<sup>2</sup></td>
+                                        <td>7-8 m<sup>2</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1300 W</td>
+                                        <td>13-16 m<sup>2</sup></td>
+                                        <td>9-11 m<sup>2</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td>1500 W</td>
+                                        <td>17-18 m<sup>2</sup></td>
+                                        <td>12-13 m<sup>2</sup></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2000 W</td>
+                                        <td>19-25 m<sup>2</sup></td>
+                                        <td>14-17 m<sup>2</sup></td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                            <p>* new buildings, rooms with good thermal insulation (80 W/m<sup>2</sup>)</p>
+                            <p>** old buildings, rooms with poorer thermal insulation (120 W/m<sup>2</sup>)</p>
+                            <br />
+                            <h5>Enter Value: </h5>
+                            <Form.Group controlId="inputField">
+                                {/* <Form.Label>Input Field</Form.Label> */}
+                                <Form.Control
+                                    type="number"
+                                    placeholder={getPlaceholderText()}
+                                    value={inputValue}
+                                    onChange={handleInputChange}
+                                />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                </Card.Body>
+            </Card>
             <Table striped bordered hover variant="light">
                 <thead>
                     <tr>
