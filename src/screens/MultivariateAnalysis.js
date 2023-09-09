@@ -69,8 +69,10 @@ function MultiAnalysis() {
     const typeMaterial = useDataFetching();
 
     const onSelect = (option) => {
+        console.log(option)
         setSelectedOption(option);
     };
+
 
     console.log(typeMaterial)
     return (
@@ -97,9 +99,7 @@ function MultiAnalysis() {
                         <p>Choose Type Material</p>
                         <Dropdown onSelect={onSelect}>
                             <Dropdown.Toggle variant="light" style={{ width: '100%' }}>
-                                {selectedOption !== null
-                                    ? `Selected: ${selectedOption.fields.type_layer}`
-                                    : 'Select Layer Type'}
+                                {selectedOption !== null ? `Selected: ${selectedOption} ` : 'Select Layer Type'}
                             </Dropdown.Toggle>
                             <Dropdown.Menu style={{ width: '100%' }}>
                                 {typeMaterial.map((item) => (
