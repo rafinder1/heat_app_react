@@ -12,6 +12,7 @@ function MultiAnalysis() {
     const [inputTemp, setInputTemp] = useState();
     const [inputPower, setInputPower] = useState();
     const [selectedOption, setSelectedOption] = useState(null);
+    const [material, setMaterial] = useState();
 
 
     const handleDropdownSelect = (eventKey) => {
@@ -69,12 +70,44 @@ function MultiAnalysis() {
     const typeMaterial = useDataFetching();
 
     const onSelect = (option) => {
-        console.log(option)
         setSelectedOption(option);
     };
 
+    const handleCalculate = async () => {
+        const requestData = {
+            selectedMaterial: selectedOption,
+        };
 
-    console.log(typeMaterial)
+        let response;
+
+        if (selectedOption === 'ocieplenie') {
+            response = await fetch('http://127.0.0.1:8000/api/polystyrene', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            })
+        } else {
+            response = await fetch('http://127.0.0.1:8000/api/materials', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData),
+            })
+        }
+        if (response.ok) {
+            const material = await response.json();
+            // Handle the calculated result (update UI or show a message)
+
+            setMaterial(material);
+        }
+
+
+    }
+
+
     return (
         <Card>
             <CardHeader title="Basic Partition Data" />
