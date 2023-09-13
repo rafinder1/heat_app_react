@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Col, Row, Dropdown } from 'react-bootstrap';
+import { Card, Col, Row, Dropdown, Button } from 'react-bootstrap';
 
 import CardHeader from '../components/CardHeader';
 import ClimateZoneDropdown from '../components/ClimateZoneDropdown';
@@ -74,11 +74,8 @@ function MultiAnalysis() {
     };
 
     const handleCalculate = async () => {
-        const requestData = {
-            selectedMaterial: selectedOption,
-        };
 
-        let response;
+        let response
 
         if (selectedOption === 'ocieplenie') {
             response = await fetch('http://127.0.0.1:8000/api/polystyrene', {
@@ -86,26 +83,26 @@ function MultiAnalysis() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(requestData),
             })
         } else {
-            response = await fetch('http://127.0.0.1:8000/api/materials', {
+            response = await fetch(`http://127.0.0.1:8000/api/materials/filter?selected_type=${selectedOption}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(requestData),
             })
         }
+
         if (response.ok) {
             const material = await response.json();
             // Handle the calculated result (update UI or show a message)
-
             setMaterial(material);
         }
 
 
     }
+
+    console.log(material)
 
 
     return (
@@ -150,6 +147,9 @@ function MultiAnalysis() {
                                 ))}
                             </Dropdown.Menu>
                         </Dropdown>
+                        <Button variant="primary" onClick={handleCalculate}>
+                            Kliknij mnie
+                        </Button>
                     </Col>
                 </Row>
             </Card.Body>
