@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Col, Row, Dropdown, Button } from 'react-bootstrap';
+import { Card, Col, Row, Dropdown } from 'react-bootstrap';
 
 import CardHeader from '../components/CardHeader';
 import ClimateZoneDropdown from '../components/ClimateZoneDropdown';
@@ -86,7 +86,7 @@ function MultiAnalysis() {
             })
         } else {
             response = await fetch(`http://127.0.0.1:8000/api/materials/filter?selected_type=${selectedOption}`, {
-                method: 'POST',
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -97,12 +97,16 @@ function MultiAnalysis() {
             const material = await response.json();
             // Handle the calculated result (update UI or show a message)
             setMaterial(material);
+            // const nameLayerList = material.material.map(item => item.fields.name_layer);
+            // const uniqueNameLayerSet = new Set(nameLayerList);
+            // console.log(uniqueNameLayerSet);
+
+            // const thicknessList = material.material.map(item => item.fields.thickness);
+            // console.log(thicknessList);
         }
 
 
     }
-
-    console.log(material)
 
 
     return (
@@ -147,9 +151,35 @@ function MultiAnalysis() {
                                 ))}
                             </Dropdown.Menu>
                         </Dropdown>
-                        <Button variant="primary" onClick={handleCalculate}>
-                            Kliknij mnie
-                        </Button>
+                        <Dropdown onClick={handleCalculate}>
+                            <Dropdown.Toggle variant="light" style={{ width: '100%' }}>
+                                {'Select MATERIAL'}
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                {material !== undefined && material.material.length > 0 ? (
+                                    material.material.map((item) => (
+                                        <Dropdown.Item
+                                            key={item.pk}
+                                            eventKey={item.fields.name_layer}
+                                        >
+                                            {item.fields.name_layer}
+                                        </Dropdown.Item>
+                                    ))
+                                ) : (
+                                    <Dropdown.Item disabled>No options available. Please select a material type first.</Dropdown.Item>
+                                )}
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        <Dropdown >
+                            <Dropdown.Toggle variant="light" style={{ width: '100%' }}>
+                                {'Select THICKNESS'}
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </Col>
                 </Row>
             </Card.Body>
