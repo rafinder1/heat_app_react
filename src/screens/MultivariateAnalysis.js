@@ -12,7 +12,11 @@ function MultiAnalysis() {
     const [inputTemp, setInputTemp] = useState();
     const [inputPower, setInputPower] = useState();
     const [selectedOption, setSelectedOption] = useState(null);
-    const [material, setMaterial] = useState();
+    const [materials, setMaterials] = useState();
+    const [uniqueMaterials, setUniqueMaterials] = useState();
+    const [selectMaterial, setSetelectMaterial] = useState(null);
+    const [thickness, setThickness] = useState();
+    const [selectThickness, setSelectThickness] = useState(null);
 
 
     const handleDropdownSelect = (eventKey) => {
@@ -71,9 +75,13 @@ function MultiAnalysis() {
 
     const onSelect = (option) => {
         setSelectedOption(option);
+        setSetelectMaterial(null);
+        setSelectThickness(null);
     };
 
-    const handleCalculate = async () => {
+
+
+    const handleMaterials = async () => {
 
         let response
 
@@ -94,19 +102,49 @@ function MultiAnalysis() {
         }
 
         if (response.ok) {
-            const material = await response.json();
-            // Handle the calculated result (update UI or show a message)
-            setMaterial(material);
-            // const nameLayerList = material.material.map(item => item.fields.name_layer);
-            // const uniqueNameLayerSet = new Set(nameLayerList);
-            // console.log(uniqueNameLayerSet);
+            const materials = await response.json();
+            setMaterials(materials);
 
-            // const thicknessList = material.material.map(item => item.fields.thickness);
-            // console.log(thicknessList);
+            const uniqueMaterials = Array.from(new Set(materials.material.map(item => item.fields.name_layer)));
+
+            setUniqueMaterials(uniqueMaterials)
         }
 
 
     }
+
+    const onSelectMaterial = (option) => {
+        setSetelectMaterial(option);
+        setSelectThickness(null);
+    };
+
+
+
+    const handleThickness = () => {
+        if (materials !== undefined) {
+
+            let thickness = [];
+
+            if (selectMaterial !== null) {
+                materials.material.forEach(element => {
+                    if (element.fields.name_layer === selectMaterial) {
+                        thickness.push(element.fields.thickness)
+                    }
+                })
+
+            }
+            setThickness(thickness);
+        }
+
+
+    }
+    const onSelectThickness = (option) => {
+        setSelectThickness(option);
+    };
+
+
+
+
 
 
     return (
@@ -151,18 +189,18 @@ function MultiAnalysis() {
                                 ))}
                             </Dropdown.Menu>
                         </Dropdown>
-                        <Dropdown onClick={handleCalculate}>
+                        <Dropdown onClick={handleMaterials} onSelect={onSelectMaterial}>
                             <Dropdown.Toggle variant="light" style={{ width: '100%' }}>
-                                {'Select MATERIAL'}
+                                {selectMaterial !== null ? `Selected: ${selectMaterial} ` : 'Select MATERIAL'}
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
-                                {material !== undefined && material.material.length > 0 ? (
-                                    material.material.map((item) => (
+                                {materials !== undefined && materials.material.length > 0 ? (
+                                    uniqueMaterials.map((item) => (
                                         <Dropdown.Item
-                                            key={item.pk}
-                                            eventKey={item.fields.name_layer}
+                                            key={item}
+                                            eventKey={item}
                                         >
-                                            {item.fields.name_layer}
+                                            {item}
                                         </Dropdown.Item>
                                     ))
                                 ) : (
@@ -170,14 +208,25 @@ function MultiAnalysis() {
                                 )}
                             </Dropdown.Menu>
                         </Dropdown>
-                        <Dropdown >
+                        <Dropdown onClick={handleThickness} onSelect={onSelectThickness}>
                             <Dropdown.Toggle variant="light" style={{ width: '100%' }}>
-                                {'Select THICKNESS'}
+                                {selectThickness !== null ? `Selected: ${selectThickness} ` : 'Select THICKNESS'}
                             </Dropdown.Toggle>
                             <Dropdown.Menu>
-                                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                                {thickness !== undefined && thickness.length > 0 ? (
+                                    thickness.map((item) => (
+                                        <Dropdown.Item
+                                            key={item}
+                                            eventKey={item}
+                                        >
+                                            {item}
+                                        </Dropdown.Item>
+                                    )
+                                    )) : (
+                                    <Dropdown.Item disabled>No options available. Please select a material first.</Dropdown.Item>
+                                )
+
+                                }
                             </Dropdown.Menu>
                         </Dropdown>
                     </Col>
