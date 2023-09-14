@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Col, Row, Dropdown } from 'react-bootstrap';
+import { Card, Col, Row, Dropdown, Table } from 'react-bootstrap';
 
 import CardHeader from '../components/CardHeader';
 import ClimateZoneDropdown from '../components/ClimateZoneDropdown';
@@ -240,6 +240,27 @@ function MultiAnalysis() {
                                 }
                             </Dropdown.Menu>
                         </Dropdown>
+
+                        <Table striped bordered hover variant="light">
+                            <thead>
+                                <tr>
+                                    <th>Type Layer</th>
+                                    <th>Name Layer</th>
+                                    <th>Thickness [m]</th>
+                                    <th>λ [W/mK]</th>
+                                    <th>Cost [PLN]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colSpan={5}>Inner Wall</td>
+                                </tr>
+
+                                <tr>
+                                    <td colSpan={5}>Outer Wall</td>
+                                </tr>
+                            </tbody>
+                        </Table>
                     </Col>
                 </Row>
             </Card.Body>
