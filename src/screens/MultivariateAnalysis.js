@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Col, Row, Dropdown, Table } from 'react-bootstrap';
+import { Card, Col, Row, Dropdown, Table, Button } from 'react-bootstrap';
 
 import CardHeader from '../components/CardHeader';
 import ClimateZoneDropdown from '../components/ClimateZoneDropdown';
@@ -17,6 +17,7 @@ function MultiAnalysis() {
     const [selectMaterial, setSetelectMaterial] = useState(null);
     const [thickness, setThickness] = useState();
     const [selectThickness, setSelectThickness] = useState(null);
+    const [rows, setRows] = useState([]);
 
 
     const handleDropdownSelect = (eventKey) => {
@@ -143,9 +144,19 @@ function MultiAnalysis() {
         setSelectThickness(option);
     };
 
+    const handleAddLayer = () => {
+        if (selectedOption !== null && selectMaterial !== null && selectThickness !== null) {
+            materials.material.forEach(element => {
+                if (element.fields.name_layer === selectMaterial) {
+                    setRows([...rows, element.fields])
+                }
+            })
+        }
+    }
 
-
-
+    const handleDelAllRows = () => {
+        setRows([])
+    }
 
 
     return (
@@ -210,7 +221,12 @@ function MultiAnalysis() {
                                         </Dropdown.Item>
                                     ))
                                 ) : (
-                                    <Dropdown.Item disabled>No options available. Please select a material type first.</Dropdown.Item>
+                                    <Dropdown.Item disabled
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                        }}>No options available. Please select a material type first.</Dropdown.Item>
                                 )}
                             </Dropdown.Menu>
                         </Dropdown>
@@ -234,13 +250,19 @@ function MultiAnalysis() {
                                         </Dropdown.Item>
                                     )
                                     )) : (
-                                    <Dropdown.Item disabled>No options available. Please select a material first.</Dropdown.Item>
+                                    <Dropdown.Item disabled
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                        }}>No options available. Please select a material first.</Dropdown.Item>
                                 )
 
                                 }
                             </Dropdown.Menu>
                         </Dropdown>
-
+                        <Button variant="primary" onClick={handleAddLayer}>Add Layer</Button>
+                        <Button variant="danger" onClick={handleDelAllRows}>Del All Layer</Button>
                         <Table striped bordered hover variant="light">
                             <thead>
                                 <tr>
@@ -255,7 +277,15 @@ function MultiAnalysis() {
                                 <tr>
                                     <td colSpan={5}>Inner Wall</td>
                                 </tr>
-
+                                {rows.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.type_layer}</td>
+                                        <td>{row.name_layer}</td>
+                                        <td>{row.thickness}</td>
+                                        <td>{row.thermal_conductivity}</td>
+                                        <td>{row.cost}</td>
+                                    </tr>
+                                ))}
                                 <tr>
                                     <td colSpan={5}>Outer Wall</td>
                                 </tr>
