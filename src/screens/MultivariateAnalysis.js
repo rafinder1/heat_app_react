@@ -133,6 +133,7 @@ function MultiAnalysis() {
                 })
 
             }
+            thickness.sort()
             setThickness(thickness);
         }
 
@@ -193,12 +194,17 @@ function MultiAnalysis() {
                             <Dropdown.Toggle variant="light" style={{ width: '100%' }}>
                                 {selectMaterial !== null ? `Selected: ${selectMaterial} ` : 'Select MATERIAL'}
                             </Dropdown.Toggle>
-                            <Dropdown.Menu>
+                            <Dropdown.Menu style={{ width: '100%' }}>
                                 {materials !== undefined && materials.material.length > 0 ? (
                                     uniqueMaterials.map((item) => (
                                         <Dropdown.Item
                                             key={item}
                                             eventKey={item}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}
                                         >
                                             {item}
                                         </Dropdown.Item>
@@ -212,12 +218,17 @@ function MultiAnalysis() {
                             <Dropdown.Toggle variant="light" style={{ width: '100%' }}>
                                 {selectThickness !== null ? `Selected: ${selectThickness} ` : 'Select THICKNESS'}
                             </Dropdown.Toggle>
-                            <Dropdown.Menu>
+                            <Dropdown.Menu style={{ width: '100%', maxHeight: '200px', overflowY: 'auto' }}>
                                 {thickness !== undefined && thickness.length > 0 ? (
                                     thickness.map((item) => (
                                         <Dropdown.Item
                                             key={item}
                                             eventKey={item}
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}
                                         >
                                             {item}
                                         </Dropdown.Item>
