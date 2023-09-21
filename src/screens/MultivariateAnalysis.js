@@ -181,7 +181,18 @@ function MultiAnalysis() {
         })
         if (response.ok) {
             const polystyrene_information = await response.json();
-            setMVC(polystyrene_information);
+            const rows = []
+            for (let i = 0; i < polystyrene_information.name_layer.length; i++) {
+                rows.push({
+                    name_layer: polystyrene_information.name_layer[i],
+                    thickness: polystyrene_information.thickness[i],
+                    temperatures: polystyrene_information.temperatures[i],
+                    thermal_conductivity: polystyrene_information.thermal_conductivity[i],
+                    cost: polystyrene_information.cost[i],
+                    comments: polystyrene_information.comments[i]
+                });
+                setMVC(rows);
+            }
 
 
         } else {
@@ -190,11 +201,6 @@ function MultiAnalysis() {
             setMVC(result)
         }
 
-    }
-
-
-    if (mvc !== null) {
-        console.log(mvc)
     }
 
 
@@ -209,11 +215,11 @@ function MultiAnalysis() {
                             options={options}
                             onSelect={handleDropdownSelect}
                         />
-                        {/* <InputField
+                        <InputField
                             value={inputTemp}
                             onChange={handleInputTemp}
                             placeholder={'Temperature [°C]'}
-                        /> */}
+                        />
                         <InputField
                             value={inputPower}
                             onChange={handleInputPower}
@@ -345,15 +351,16 @@ function MultiAnalysis() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* {mvc.map((row, index) => (
+                                {mvc && mvc.map((row, index) => (
                                     <tr key={index}>
-                                        <td>{row.model}</td>
                                         <td>{row.name_layer}</td>
                                         <td>{row.thickness}</td>
                                         <td>{row.thermal_conductivity}</td>
+                                        <td>{row.temperatures}</td>
                                         <td>{row.cost}</td>
+                                        <td>{row.comments}</td>
                                     </tr>
-                                ))} */}
+                                ))}
                             </tbody>
                         </Table>
                     </Col>
