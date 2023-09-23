@@ -77,6 +77,7 @@ const CustomTable = () => {
                             value={inputValue}
                             onChange={handleInputChange}
                             placeholder={getPlaceholderText()}
+                            header={getPlaceholderText()}
                         />
                     </Col>
                 </Row>

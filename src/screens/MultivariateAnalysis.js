@@ -9,8 +9,8 @@ import { options } from '../CalculateTemperature/constans/Constans';
 
 function MultiAnalysis() {
     const [selectedTemp, setSelectedZone] = useState(null);
-    const [inputTemp, setInputTemp] = useState();
-    const [inputPower, setInputPower] = useState();
+    const [inputTemp, setInputTemp] = useState(null);
+    const [inputPower, setInputPower] = useState(null);
     const [selectedOption, setSelectedOption] = useState(null);
     const [materials, setMaterials] = useState();
     const [uniqueMaterials, setUniqueMaterials] = useState();
@@ -88,7 +88,7 @@ function MultiAnalysis() {
         let response
 
         if (selectedOption === 'ocieplenie') {
-            response = await fetch('http://127.0.0.1:8000/api/polystyrene', {
+            response = await fetch('http://127.0.0.1:8000/api/thermal_isolation', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -106,7 +106,6 @@ function MultiAnalysis() {
         if (response.ok) {
             const materials = await response.json();
             setMaterials(materials);
-
             const uniqueMaterials = Array.from(new Set(materials.material.map(item => item.fields.name_layer)));
 
             setUniqueMaterials(uniqueMaterials)
@@ -163,6 +162,7 @@ function MultiAnalysis() {
 
     const handleCalculate = async () => {
         const requestData = {
+            expected_temperature: inputTemp,
             data_building_partition: rows,
             heat_information: {
                 inside_temperature: null,
@@ -188,8 +188,7 @@ function MultiAnalysis() {
                     thickness: polystyrene_information.thickness[i],
                     temperatures: polystyrene_information.temperatures[i],
                     thermal_conductivity: polystyrene_information.thermal_conductivity[i],
-                    cost: polystyrene_information.cost[i],
-                    comments: polystyrene_information.comments[i]
+                    cost: polystyrene_information.cost[i]
                 });
                 setMVC(rows);
             }
@@ -205,168 +204,213 @@ function MultiAnalysis() {
 
 
     return (
-        <Card>
-            <CardHeader title="Basic Partition Data" />
-            <Card.Body>
-                <Row>
-                    <Col>
-                        <ClimateZoneDropdown
-                            selectedTemp={selectedTemp}
-                            options={options}
-                            onSelect={handleDropdownSelect}
-                        />
-                        <InputField
-                            value={inputTemp}
-                            onChange={handleInputTemp}
-                            placeholder={'Temperature [°C]'}
-                        />
-                        <InputField
-                            value={inputPower}
-                            onChange={handleInputPower}
-                            placeholder={'Power Heater [W/m2]'}
-                        />
-                        <p>Choose Type Material</p>
-                        <Dropdown onSelect={onSelect}>
-                            <Dropdown.Toggle variant="light" style={{ width: '100%' }}>
-                                {selectedOption !== null ? `Selected: ${selectedOption} ` : 'Select Layer Type'}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu style={{ width: '100%' }}>
-                                {typeMaterial.map((item) => (
-                                    <Dropdown.Item
-                                        key={item.pk}
-                                        eventKey={item.fields.type_layer}
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        {item.fields.type_layer}
-                                    </Dropdown.Item>
-                                ))}
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        <Dropdown onClick={handleMaterials} onSelect={onSelectMaterial}>
-                            <Dropdown.Toggle variant="light" style={{ width: '100%' }}>
-                                {selectMaterial !== null ? `Selected: ${selectMaterial} ` : 'Select MATERIAL'}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu style={{ width: '100%' }}>
-                                {materials !== undefined && materials.material.length > 0 ? (
-                                    uniqueMaterials.map((item) => (
-                                        <Dropdown.Item
-                                            key={item}
-                                            eventKey={item}
-                                            style={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            {item}
-                                        </Dropdown.Item>
-                                    ))
-                                ) : (
-                                    <Dropdown.Item disabled
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}>No options available. Please select a material type first.</Dropdown.Item>
-                                )}
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        <Dropdown onClick={handleThickness} onSelect={onSelectThickness}>
-                            <Dropdown.Toggle variant="light" style={{ width: '100%' }}>
-                                {selectThickness !== null ? `Selected: ${selectThickness} ` : 'Select THICKNESS'}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu style={{ width: '100%', maxHeight: '200px', overflowY: 'auto' }}>
-                                {thickness !== undefined && thickness.length > 0 ? (
-                                    thickness.map((item) => (
-                                        <Dropdown.Item
-                                            key={item}
-                                            eventKey={item}
-                                            style={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            {item}
-                                        </Dropdown.Item>
-                                    )
-                                    )) : (
-                                    <Dropdown.Item disabled
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}>No options available. Please select a material first.</Dropdown.Item>
-                                )
+        <>
+            <Card>
+                <CardHeader title="Multivariate Analysis" />
+                <Card.Body>
 
-                                }
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        <Button variant="primary" onClick={handleAddLayer}>Add Layer</Button>
-                        <Button variant="danger" onClick={handleDelAllRows}>Del All Layer</Button>
-                        <Table striped bordered hover variant="light">
-                            <thead>
-                                <tr>
-                                    <th>Type Layer</th>
-                                    <th>Name Layer</th>
-                                    <th>Thickness [m]</th>
-                                    <th>λ [W/mK]</th>
-                                    <th>Cost [PLN]</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colSpan={5}>Inner Wall</td>
-                                </tr>
-                                {rows.map((row, index) => (
-                                    <tr key={index}>
-                                        <td>{row.type_layer}</td>
-                                        <td>{row.name_layer}</td>
-                                        <td>{row.thickness}</td>
-                                        <td>{row.thermal_conductivity}</td>
-                                        <td>{row.cost}</td>
+                    <Row>
+                        <Col>
+                            <ClimateZoneDropdown
+                                selectedTemp={selectedTemp}
+                                options={options}
+                                onSelect={handleDropdownSelect}
+                            />
+                        </Col>
+
+                        <Col>
+                            <InputField
+                                value={inputTemp}
+                                onChange={handleInputTemp}
+                                placeholder={'Temperature'}
+                                header={'Expected Temperature [°C]'}
+                            />
+                        </Col>
+
+                        <Col>
+                            <InputField
+                                value={inputPower}
+                                onChange={handleInputPower}
+                                placeholder={'Power Heater'}
+                                header={'Power Heater [W/m2]'}
+                            />
+                        </Col>
+                    </Row>
+                    <br></br>
+                    <Row>
+                        <Col>
+                            <Row>
+                                <p>Choose Type Material</p>
+                                <Dropdown onSelect={onSelect} >
+                                    <Dropdown.Toggle variant="light" style={{ width: '100%', margin: '2.5px' }}>
+                                        {selectedOption !== null ? `Selected: ${selectedOption} ` : 'Select Layer Type'}
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu style={{ width: '96.5%' }}>
+                                        {typeMaterial.map((item) => (
+                                            <Dropdown.Item
+                                                key={item.pk}
+                                                eventKey={item.fields.type_layer}
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                {item.fields.type_layer}
+                                            </Dropdown.Item>
+                                        ))}
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </Row>
+                            <Row>
+                                <Dropdown onClick={handleMaterials} onSelect={onSelectMaterial} style={{ width: '100%' }}>
+                                    <Dropdown.Toggle variant="light" style={{ width: '100%', margin: '2.5px' }}>
+                                        {selectMaterial !== null ? `Selected: ${selectMaterial} ` : 'Select MATERIAL'}
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu style={{ width: '96.5%' }}>
+                                        {materials !== undefined && materials.material.length > 0 ? (
+                                            uniqueMaterials.map((item) => (
+                                                <Dropdown.Item
+                                                    key={item}
+                                                    eventKey={item}
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    {item}
+                                                </Dropdown.Item>
+                                            ))
+                                        ) : (
+                                            <Dropdown.Item disabled
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                }}>No options available. Please select a material type first.</Dropdown.Item>
+                                        )}
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </Row>
+                            <Row>
+                                <Dropdown onClick={handleThickness} onSelect={onSelectThickness}>
+                                    <Dropdown.Toggle variant="secondary" style={{ width: '100%', margin: '2.5px' }}>
+                                        {selectThickness !== null ? `Selected: ${selectThickness} ` : 'Select THICKNESS'}
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu style={{ width: '96.5%', maxHeight: '200px', overflowY: 'auto' }}>
+                                        {thickness !== undefined && thickness.length > 0 ? (
+                                            thickness.map((item) => (
+                                                <Dropdown.Item
+                                                    key={item}
+                                                    eventKey={item}
+                                                    style={{
+                                                        display: 'flex',
+                                                        justifyContent: 'center',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    {item}
+                                                </Dropdown.Item>
+                                            )
+                                            )) : (
+                                            <Dropdown.Item disabled
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                }}>No options available. Please select a material first.</Dropdown.Item>
+                                        )
+
+                                        }
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </Row>
+                        </Col>
+                        <Col className="d-flex align-items-center justify-content-center">
+
+                            <Button variant="primary" onClick={handleAddLayer} style={{ width: '25%', margin: '10px' }}>Add Layer</Button >
+                            <Button variant="danger" onClick={handleDelAllRows} style={{ width: '25%', margin: '10px' }}>Del All Layer</Button>
+                            <Button variant="success" onClick={handleCalculate} style={{ width: '25%', margin: '10px' }}>Calculate</Button>
+
+                        </Col>
+                    </Row>
+                    <br></br>
+                    <Row>
+                        <Col>
+                            <h5>Table 1. Layers in the building envelope</h5>
+                            <Table striped bordered hover variant="light">
+                                <thead>
+                                    <tr>
+                                        <th>Type Layer</th>
+                                        <th>Name Layer</th>
+                                        <th>Thickness [m]</th>
+                                        <th>λ [W/mK]</th>
+                                        <th>Cost [PLN]</th>
                                     </tr>
-                                ))}
-                                <tr>
-                                    <td colSpan={5}>Outer Wall</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-
-                        <Button variant="success" onClick={handleCalculate} >Calculate</Button>
-
-                        <Table striped bordered hover variant="light">
-                            <thead>
-                                <tr>
-                                    <th>Name Layer</th>
-                                    <th>Thickness [m]</th>
-                                    <th>λ [W/mK]</th>
-                                    <th>Temperature [°C]</th>
-                                    <th>Cost [PLN]</th>
-                                    <th>Comments</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {mvc && mvc.map((row, index) => (
-                                    <tr key={index}>
-                                        <td>{row.name_layer}</td>
-                                        <td>{row.thickness}</td>
-                                        <td>{row.thermal_conductivity}</td>
-                                        <td>{row.temperatures}</td>
-                                        <td>{row.cost}</td>
-                                        <td>{row.comments}</td>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colSpan={5}>Inner Wall</td>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </Table>
-                    </Col>
-                </Row>
-            </Card.Body>
-        </Card>
+                                    {rows.map((row, index) => (
+                                        <tr key={index} >
+                                            <td>{row.type_layer}</td>
+                                            <td>{row.name_layer}</td>
+                                            <td>{row.thickness}</td>
+                                            <td>{row.thermal_conductivity}</td>
+                                            <td>{row.cost}</td>
+                                        </tr>
+                                    ))}
+                                    <tr>
+                                        <td colSpan={5}>Outer Wall</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+
+                            <br></br>
+                            <h5>Table 2. Optimized polystyrene layers</h5>
+
+                            <Table striped bordered hover variant="light">
+                                <thead>
+                                    <tr>
+                                        <th>Name Layer</th>
+                                        <th>Thickness [m]</th>
+                                        <th>λ [W/mK]</th>
+                                        <th>Temperature [°C]</th>
+                                        <th>Cost [PLN]</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {mvc && mvc.map((row, index) => (
+                                        <tr key={index}>
+                                            <td>{row.name_layer}</td>
+                                            <td>{row.thickness}</td>
+                                            <td>{row.thermal_conductivity}</td>
+                                            <td>{row.temperatures}</td>
+                                            <td>{row.cost}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </Col>
+                    </Row>
+                </Card.Body>
+            </Card>
+            <br></br>
+            <Card>
+                <CardHeader title="Count Amount Polystyrene" >
+                </CardHeader>
+                <Card.Body>
+                    <InputField
+                        value={inputTemp}
+                        onChange={handleInputTemp}
+                        placeholder={'Wall Surface'}
+                        header={'Wall Surface [m2]'}
+                    />
+                </Card.Body>
+            </Card>
+        </>
 
     )
 }

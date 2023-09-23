@@ -1,8 +1,8 @@
 import { Form } from 'react-bootstrap';
 
-const InputField = ({ value, onChange, placeholder }) => (
+const InputField = ({ value, onChange, placeholder, header }) => (
     <>
-        <h5>Enter Value: </h5>
+        <h5>{header} </h5>
         <Form.Group controlId="inputField">
             <Form.Control
                 type="number"
