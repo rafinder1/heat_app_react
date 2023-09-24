@@ -1,12 +1,12 @@
 import { Container } from 'react-bootstrap';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Use BrowserRouter instead of HashRouter
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React from 'react';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import CalculateTemperature from './screens/CalculateTemperature';
-import Home from './screens/Home';
-import MultivariateAnalysis from './screens/MultivariateAnalysis';
-import Login from './screens/Login';
+import Header from '../components/header';
+import Footer from '../components/footer';
+import CalculateTemperature from './calculate-temperature/calculate-temperature.components';
+import Home from './home/home';
+import MultivariateAnalysis from './multivariate-analysis/multivariate-analysis.components';
+import Login from './login/login';
 
 function App() {
   return (
