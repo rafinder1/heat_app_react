@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Card, Col, Row, Dropdown, Table, Button } from 'react-bootstrap';
 
-import CardHeader from '../components/CardHeader';
-import ClimateZoneDropdown from '../components/ClimateZoneDropdown';
-import InputField from '../components/InputField';
+import CardHeader from '../../components/card-header';
+import ClimateZoneDropdown from '../../components/climate-zone-dropdown';
+import InputField from '../../components/input-field';
 
-import { options } from '../CalculateTemperature/constans/Constans';
+import { options } from '../../constans/constans';
 
 function MultiAnalysis() {
     const [selectedTemp, setSelectedZone] = useState(null);

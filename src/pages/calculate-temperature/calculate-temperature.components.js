@@ -1,18 +1,18 @@
 import React from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 
-import CardHeader from '../components/CardHeader';
-import ResultPlot from '../components/ResultPlot';
-import LayersTable from '../components/LayersTable';
-import TodoList from '../components/TodoList';
-import InputField from '../components/InputField';
-import HeatedAreaTable from '../components/HeatedAreaTable';
-import ClimateZoneDropdown from '../components/ClimateZoneDropdown';
-import BuildingConditionsSection from '../components/BuildingConditionsSection';
+import CardHeader from '../../components/card-header';
+import ResultPlot from './components/result-plot';
+import LayersTable from './components/layers-table';
+import TodoList from './components/todo-list';
+import InputField from '../../components/input-field';
+import HeatedAreaTable from './components/heated-area-table';
+import ClimateZoneDropdown from '../../components/climate-zone-dropdown';
+import BuildingConditionsSection from './components/building-conditions-section';
 
-import { options } from '../CalculateTemperature/constans/Constans';
-import useDataFetching from '../CalculateTemperature/hooks/DataFetching';
-import useHandlers from '../CalculateTemperature/hooks/Handlers';
+import { options } from '../../constans/constans';
+import useDataFetching from './hooks/data-fetching';
+import useHandlers from './hooks/handlers';
 
 
 const CustomTable = () => {
