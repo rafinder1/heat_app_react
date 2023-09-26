@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Card, Col, Row, Dropdown, Table, Button } from 'react-bootstrap';
+import { useState } from 'react';
+import { Card, Col, Row, Button } from 'react-bootstrap';
 
 import CardHeader from '../../components/card-header';
 import ClimateZoneDropdown from '../../components/climate-zone-dropdown';
@@ -7,11 +7,26 @@ import InputField from '../../components/input-field';
 
 import { options } from '../../constans/constans';
 
+import MaterialsDropdown from './components/material-dropdown';
+import ThicknessDropdown from './components/thickness-dropdown';
+import TypeMaterialDropdown from './components/type-material-dropdown';
+import Tables from './components/layer-polystyrene-tables';
+
+import useDropdownSelect from './hooks/useDropdownSelectCZD';
+import useInputTemp from './hooks/useInputTemp';
+import useInputPower from './hooks/useInputPower';
+import useDataFetchingTypeMaterials from './hooks/useDataFetchingTypeMaterials';
+
+
 function MultiAnalysis() {
-    const [selectedTemp, setSelectedZone] = useState(null);
-    const [inputTemp, setInputTemp] = useState(null);
-    const [inputPower, setInputPower] = useState(null);
+    const { selectedTemp, handleDropdownSelect } = useDropdownSelect();
+    const { inputTemp, handleInputTemp } = useInputTemp();
+    const { inputPower, handleInputPower } = useInputPower();
+    const typeMaterial = useDataFetchingTypeMaterials()
+
+
     const [selectedOption, setSelectedOption] = useState(null);
+
     const [materials, setMaterials] = useState();
     const [uniqueMaterials, setUniqueMaterials] = useState();
     const [selectMaterial, setSetelectMaterial] = useState(null);
@@ -21,65 +36,22 @@ function MultiAnalysis() {
     const [mvc, setMVC] = useState(null);
 
 
-    const handleDropdownSelect = (eventKey) => {
-
-        const selectedTemperature = parseInt(eventKey.split(': ')[1]);
-
-        setSelectedZone(selectedTemperature);
-    };
-
-    const handleInputTemp = (event) => {
-        const inputValue = event.target.value;
-
-        if (inputValue !== '') {
-            const parsedValue = parseFloat(inputValue);
-
-            if (!isNaN(parsedValue)) {
-                setInputTemp(parsedValue)
-            }
-        }
-    }
-
-    const handleInputPower = (event) => {
-        const inputValue = event.target.value;
-
-        if (inputValue !== '') {
-            const parsedValue = parseFloat(inputValue);
-
-            if (!isNaN(parsedValue)) {
-                setInputPower(parsedValue)
-            }
-        }
-    }
-
-
-    const useDataFetching = () => {
-        const [typeMaterial, setTypeMaterial] = useState([]);
-        const fetchData = async () => {
-
-            const response = await fetch('http://127.0.0.1:8000/api/type_layers', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            const jsonData = await response.json();
-            setTypeMaterial(jsonData.type_layers);
-        }
-        useEffect(() => {
-            fetchData();
-        }, []);
-
-        return typeMaterial;
-    };
-
-    const typeMaterial = useDataFetching();
 
     const onSelect = (option) => {
         setSelectedOption(option);
         setSetelectMaterial(null);
         setSelectThickness(null);
     };
+
+    const onSelectMaterial = (option) => {
+        setSetelectMaterial(option);
+        setSelectThickness(null);
+    };
+
+    const onSelectThickness = (option) => {
+        setSelectThickness(parseFloat(option));
+    };
+
 
 
 
@@ -114,10 +86,7 @@ function MultiAnalysis() {
 
     }
 
-    const onSelectMaterial = (option) => {
-        setSetelectMaterial(option);
-        setSelectThickness(null);
-    };
+
 
 
 
@@ -140,9 +109,7 @@ function MultiAnalysis() {
 
 
     }
-    const onSelectThickness = (option) => {
-        setSelectThickness(parseFloat(option));
-    };
+
 
     const handleAddLayer = () => {
         if (selectedOption !== null && selectMaterial !== null && selectThickness !== null) {
@@ -239,93 +206,25 @@ function MultiAnalysis() {
                     <br></br>
                     <Row>
                         <Col>
-                            <Row>
-                                <p>Choose Type Material</p>
-                                <Dropdown onSelect={onSelect} >
-                                    <Dropdown.Toggle variant="light" style={{ width: '100%', margin: '2.5px' }}>
-                                        {selectedOption !== null ? `Selected: ${selectedOption} ` : 'Select Layer Type'}
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu style={{ width: '96.5%' }}>
-                                        {typeMaterial.map((item) => (
-                                            <Dropdown.Item
-                                                key={item.pk}
-                                                eventKey={item.fields.type_layer}
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                }}
-                                            >
-                                                {item.fields.type_layer}
-                                            </Dropdown.Item>
-                                        ))}
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            </Row>
-                            <Row>
-                                <Dropdown onClick={handleMaterials} onSelect={onSelectMaterial} style={{ width: '100%' }}>
-                                    <Dropdown.Toggle variant="light" style={{ width: '100%', margin: '2.5px' }}>
-                                        {selectMaterial !== null ? `Selected: ${selectMaterial} ` : 'Select MATERIAL'}
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu style={{ width: '96.5%' }}>
-                                        {materials !== undefined && materials.material.length > 0 ? (
-                                            uniqueMaterials.map((item) => (
-                                                <Dropdown.Item
-                                                    key={item}
-                                                    eventKey={item}
-                                                    style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    {item}
-                                                </Dropdown.Item>
-                                            ))
-                                        ) : (
-                                            <Dropdown.Item disabled
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                }}>No options available. Please select a material type first.</Dropdown.Item>
-                                        )}
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            </Row>
-                            <Row>
-                                <Dropdown onClick={handleThickness} onSelect={onSelectThickness}>
-                                    <Dropdown.Toggle variant="secondary" style={{ width: '100%', margin: '2.5px' }}>
-                                        {selectThickness !== null ? `Selected: ${selectThickness} ` : 'Select THICKNESS'}
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu style={{ width: '96.5%', maxHeight: '200px', overflowY: 'auto' }}>
-                                        {thickness !== undefined && thickness.length > 0 ? (
-                                            thickness.map((item) => (
-                                                <Dropdown.Item
-                                                    key={item}
-                                                    eventKey={item}
-                                                    style={{
-                                                        display: 'flex',
-                                                        justifyContent: 'center',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    {item}
-                                                </Dropdown.Item>
-                                            )
-                                            )) : (
-                                            <Dropdown.Item disabled
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                }}>No options available. Please select a material first.</Dropdown.Item>
-                                        )
+                            <TypeMaterialDropdown
+                                selectedOption={selectedOption}
+                                typeMaterial={typeMaterial}
+                                onSelect={onSelect}
+                            />
+                            <MaterialsDropdown
+                                selectMaterial={selectMaterial}
+                                materials={materials}
+                                uniqueMaterials={uniqueMaterials}
+                                onSelectMaterial={onSelectMaterial}
+                                handleMaterials={handleMaterials}
+                            />
+                            <ThicknessDropdown
+                                selectThickness={selectThickness}
+                                thickness={thickness}
+                                onSelectThickness={onSelectThickness}
+                                handleThickness={handleThickness}
+                            />
 
-                                        }
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            </Row>
                         </Col>
                         <Col className="d-flex align-items-center justify-content-center">
 
@@ -336,65 +235,10 @@ function MultiAnalysis() {
                         </Col>
                     </Row>
                     <br></br>
-                    <Row>
-                        <Col>
-                            <h5>Table 1. Layers in the building envelope</h5>
-                            <Table striped bordered hover variant="light">
-                                <thead>
-                                    <tr>
-                                        <th>Type Layer</th>
-                                        <th>Name Layer</th>
-                                        <th>Thickness [m]</th>
-                                        <th>λ [W/mK]</th>
-                                        <th>Cost [PLN]</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colSpan={5}>Inner Wall</td>
-                                    </tr>
-                                    {rows.map((row, index) => (
-                                        <tr key={index} >
-                                            <td>{row.type_layer}</td>
-                                            <td>{row.name_layer}</td>
-                                            <td>{row.thickness}</td>
-                                            <td>{row.thermal_conductivity}</td>
-                                            <td>{row.cost}</td>
-                                        </tr>
-                                    ))}
-                                    <tr>
-                                        <td colSpan={5}>Outer Wall</td>
-                                    </tr>
-                                </tbody>
-                            </Table>
-
-                            <br></br>
-                            <h5>Table 2. Optimized polystyrene layers</h5>
-
-                            <Table striped bordered hover variant="light">
-                                <thead>
-                                    <tr>
-                                        <th>Name Layer</th>
-                                        <th>Thickness [m]</th>
-                                        <th>λ [W/mK]</th>
-                                        <th>Temperature [°C]</th>
-                                        <th>Cost [PLN]</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {mvc && mvc.map((row, index) => (
-                                        <tr key={index}>
-                                            <td>{row.name_layer}</td>
-                                            <td>{row.thickness}</td>
-                                            <td>{row.thermal_conductivity}</td>
-                                            <td>{row.temperatures}</td>
-                                            <td>{row.cost}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </Table>
-                        </Col>
-                    </Row>
+                    <Tables
+                        rows={rows}
+                        mvc={mvc}
+                    />
                 </Card.Body>
             </Card>
             <br></br>
@@ -403,8 +247,8 @@ function MultiAnalysis() {
                 </CardHeader>
                 <Card.Body>
                     <InputField
-                        value={inputTemp}
-                        onChange={handleInputTemp}
+                        value={null}
+                        onChange={null}
                         placeholder={'Wall Surface'}
                         header={'Wall Surface [m2]'}
                     />
