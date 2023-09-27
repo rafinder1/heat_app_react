@@ -120,19 +120,6 @@ function MultiAnalysis() {
                     />
                 </Card.Body>
             </Card>
-            <br></br>
-            <Card>
-                <CardHeader title="Count Amount Polystyrene" >
-                </CardHeader>
-                <Card.Body>
-                    <InputField
-                        value={null}
-                        onChange={null}
-                        placeholder={'Wall Surface'}
-                        header={'Wall Surface [m2]'}
-                    />
-                </Card.Body>
-            </Card>
         </>
 
     )
