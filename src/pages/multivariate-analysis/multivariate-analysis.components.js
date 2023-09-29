@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card, Col, Row, Button } from 'react-bootstrap';
 
 import CardHeader from '../../components/card-header';
@@ -17,6 +18,8 @@ import useInputPower from './hooks/use-input-power';
 import useDataFetchingTypeMaterials from './hooks/use-data-fetching-type-materials';
 import { useMultiAnalysisHandlers } from './hooks/multi-analysis-handlers';
 import { useMultiCalculationHandlers } from './hooks/multi-calculation-handler';
+
+
 
 function MultiAnalysis() {
     const { selectedTemp, handleDropdownSelect } = useDropdownSelect();
@@ -45,6 +48,8 @@ function MultiAnalysis() {
         mvc,
         handleCalculate
     } = useMultiCalculationHandlers(inputTemp, rows, selectedTemp, inputPower);
+
+
 
 
 
@@ -106,17 +111,28 @@ function MultiAnalysis() {
 
                         </Col>
                         <Col className="d-flex align-items-center justify-content-center">
-
                             <Button variant="primary" onClick={handleAddLayer} style={{ width: '25%', margin: '10px' }}>Add Layer</Button >
                             <Button variant="danger" onClick={handleDelAllRows} style={{ width: '25%', margin: '10px' }}>Del All Layer</Button>
                             <Button variant="success" onClick={handleCalculate} style={{ width: '25%', margin: '10px' }}>Calculate</Button>
-
                         </Col>
                     </Row>
                     <br></br>
                     <Tables
                         rows={rows}
                         mvc={mvc}
+                    />
+                </Card.Body>
+            </Card>
+            <br></br>
+            <Card>
+                <CardHeader title="Count Amount Polystyrene" >
+                </CardHeader>
+                <Card.Body>
+                    <InputField
+                        value={null}
+                        onChange={null}
+                        placeholder={'Wall Surface'}
+                        header={'Wall Surface [m2]'}
                     />
                 </Card.Body>
             </Card>

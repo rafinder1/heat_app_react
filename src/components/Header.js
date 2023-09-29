@@ -11,7 +11,6 @@ function Header() {
                         <Nav className="mr-auto">
                             <Nav.Link href="/calc_temp"><i className='fas fa-thermometer-half'></i>  Calculate Temperature</Nav.Link>
                             <Nav.Link href="/multi_analysis">Multivariate Analysis</Nav.Link>
-                            <Nav.Link href="/count_amount_polystyrene">Count Amount Polystyrene</Nav.Link>
                             <Nav.Link href="/login"><i className='fas fa-user'></i>  Login</Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
