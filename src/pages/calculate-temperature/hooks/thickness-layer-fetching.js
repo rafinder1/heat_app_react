@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-const useDataFetching = () => {
+
+const useThicknessLayerFetchingFetching = () => {
     const [data, setData] = useState([]);
 
     const fetchData = async () => {
@@ -10,9 +11,10 @@ const useDataFetching = () => {
                 'Content-Type': 'application/json',
             },
         });
-        const jsonData = await response.json();
+        // const jsonData = await response.json();
 
-        setData(jsonData);
+        // setData(jsonData.materials);
+        console.log(jsonData)
     }
 
     useEffect(() => {

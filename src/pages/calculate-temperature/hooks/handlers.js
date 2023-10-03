@@ -17,14 +17,13 @@ const useHandlers = (data) => {
         newRows[index].name_layer = selectedLayer;
 
         // Fetch corresponding data from JSON and update the row
-        const matchingData = data.find(item => item.fields.name_layer === selectedLayer);
+        const matchingData = data.find(item => item.name_layer === selectedLayer);
 
         if (matchingData) {
-            console.log(matchingData)
-            newRows[index].type_layer = matchingData.fields.type_layer;
-            newRows[index].thickness = matchingData.fields.thickness;
-            newRows[index].thermal_conductivity = matchingData.fields.thermal_conductivity;
-            newRows[index].cost = matchingData.fields.cost;
+            newRows[index].type_layer = matchingData.type_layer;
+            newRows[index].thickness = matchingData.thickness;
+            newRows[index].thermal_conductivity = matchingData.thermal_conductivity;
+            newRows[index].cost = matchingData.cost;
         }
 
         setRows(newRows);

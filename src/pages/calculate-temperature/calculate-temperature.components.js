@@ -34,7 +34,7 @@ const CustomTable = () => {
         addRowWithDropdown,
     } = useHandlers(data);
 
-    const dropdownOptions = data.map(item => item.fields.name_layer);
+    const dropdownOptions = data.map(item => item.name_layer);
 
     const getPlaceholderText = () => {
         switch (selectedOption) {
