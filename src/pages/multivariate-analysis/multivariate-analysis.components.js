@@ -49,11 +49,6 @@ function MultiAnalysis() {
         handleCalculate
     } = useMultiCalculationHandlers(inputTemp, rows, selectedTemp, inputPower);
 
-
-
-
-
-
     return (
         <>
             <Card>
