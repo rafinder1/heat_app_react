@@ -3,7 +3,6 @@ import { useState } from 'react';
 export const useMultiAnalysisHandlers = () => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [materials, setMaterials] = useState();
-    const [uniqueMaterials, setUniqueMaterials] = useState();
     const [selectMaterial, setSetelectMaterial] = useState(null);
     const [thickness, setThickness] = useState();
     const [selectThickness, setSelectThickness] = useState(null);
@@ -25,17 +24,31 @@ export const useMultiAnalysisHandlers = () => {
     };
 
     const handleMaterials = async () => {
-        let response;
-        if (selectedOption === 'ocieplenie') {
-            response = await fetch('http://127.0.0.1:8000/api/thermal_isolation', {
+        const response = await fetch(
+            `http://127.0.0.1:8000/api/materials/filter?selected_type=${selectedOption}`,
+            {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            });
-        } else {
-            response = await fetch(
-                `http://127.0.0.1:8000/api/materials/filter?selected_type=${selectedOption}`,
+            }
+        );
+
+
+
+        if (response.ok) {
+            const materials = await response.json();
+            setMaterials(materials);
+
+        }
+    };
+
+    const handleThickness = async () => {
+        if (materials !== undefined) {
+            let thickness = [];
+
+            const response = await fetch(
+                `http://127.0.0.1:8000/api/thickness_material/filter?selected_material=${selectMaterial}`,
                 {
                     method: 'GET',
                     headers: {
@@ -43,30 +56,25 @@ export const useMultiAnalysisHandlers = () => {
                     },
                 }
             );
-        }
+            console.log(response)
+            if (response.ok) {
+                const var_materials = await response.json();
 
-        if (response.ok) {
-            const materials = await response.json();
-            setMaterials(materials);
-            const uniqueMaterials = Array.from(
-                new Set(materials.material.map((item) => item.fields.name_layer))
-            );
+                console.log(var_materials)
+                // setMaterials(materials);
 
-            setUniqueMaterials(uniqueMaterials);
-        }
-    };
-
-    const handleThickness = () => {
-        if (materials !== undefined) {
-            let thickness = [];
-
-            if (selectMaterial !== null) {
-                materials.material.forEach((element) => {
-                    if (element.fields.name_layer === selectMaterial) {
-                        thickness.push(element.fields.thickness);
-                    }
-                });
             }
+
+            // if (selectMaterial !== null) {
+            //     materials.material.forEach((element) => {
+            //         if (element.fields.name_layer === selectMaterial) {
+            //             thickness.push(element.fields.thickness);
+            //         }
+            //     });
+            // }
+            console.log(11111111111111)
+            console.log(thickness)
+            console.log(11111111111111)
             thickness.sort();
             setThickness(thickness);
         }
@@ -94,7 +102,6 @@ export const useMultiAnalysisHandlers = () => {
     return {
         selectedOption,
         materials,
-        uniqueMaterials,
         selectMaterial,
         thickness,
         selectThickness,

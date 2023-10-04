@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Dropdown } from 'react-bootstrap';
 
-function MaterialsDropdown({ selectMaterial, materials, uniqueMaterials, onSelectMaterial, handleMaterials }) {
+function MaterialsDropdown({ selectMaterial, materials, onSelectMaterial, handleMaterials }) {
     return (
         <Row>
             <Dropdown onClick={handleMaterials} onSelect={onSelectMaterial} style={{ width: '100%' }}>
@@ -9,18 +9,18 @@ function MaterialsDropdown({ selectMaterial, materials, uniqueMaterials, onSelec
                     {selectMaterial !== null ? `Selected: ${selectMaterial} ` : 'Select MATERIAL'}
                 </Dropdown.Toggle>
                 <Dropdown.Menu style={{ width: '96.5%' }}>
-                    {materials !== undefined && materials.material.length > 0 ? (
-                        uniqueMaterials.map((item) => (
+                    {materials !== undefined && materials.length > 0 ? (
+                        materials.map((item) => (
                             <Dropdown.Item
-                                key={item}
-                                eventKey={item}
+                                key={item.id}
+                                eventKey={item.name_layer}
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}
                             >
-                                {item}
+                                {item.name_layer}
                             </Dropdown.Item>
                         ))
                     ) : (

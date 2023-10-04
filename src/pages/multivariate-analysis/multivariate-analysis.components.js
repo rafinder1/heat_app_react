@@ -30,7 +30,6 @@ function MultiAnalysis() {
     const {
         selectedOption,
         materials,
-        uniqueMaterials,
         selectMaterial,
         thickness,
         selectThickness,
@@ -48,7 +47,7 @@ function MultiAnalysis() {
         mvc,
         handleCalculate
     } = useMultiCalculationHandlers(inputTemp, rows, selectedTemp, inputPower);
-
+    console.log(typeMaterial)
     return (
         <>
             <Card>
@@ -93,7 +92,6 @@ function MultiAnalysis() {
                             <MaterialsDropdown
                                 selectMaterial={selectMaterial}
                                 materials={materials}
-                                uniqueMaterials={uniqueMaterials}
                                 onSelectMaterial={onSelectMaterial}
                                 handleMaterials={handleMaterials}
                             />

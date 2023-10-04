@@ -11,21 +11,21 @@ function TypeMaterialDropdown({ selectedOption, typeMaterial, onSelect }) {
                 </Dropdown.Toggle>
                 <Dropdown.Menu style={{ width: '96.5%' }}>
                     {typeMaterial.map((item) => (
-                        <Dropdown.Item
+                        < Dropdown.Item
                             key={item.pk}
-                            eventKey={item.fields.type_layer}
+                            eventKey={item.type_layer}
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
                             }}
                         >
-                            {item.fields.type_layer}
+                            {item.type_layer}
                         </Dropdown.Item>
                     ))}
                 </Dropdown.Menu>
             </Dropdown>
-        </Row>
+        </Row >
     );
 }
 

@@ -12,7 +12,7 @@ function useDataFetchingTypeMaterials() {
         });
 
         const jsonData = await response.json();
-        setTypeMaterial(jsonData.type_layers);
+        setTypeMaterial(jsonData);
     };
 
     useEffect(() => {
