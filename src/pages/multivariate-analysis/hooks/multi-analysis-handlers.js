@@ -64,8 +64,6 @@ export const useMultiAnalysisHandlers = () => {
 
     const handleAddLayer = () => {
         if (selectedOption !== null && selectMaterial !== null && selectThickness !== null) {
-            console.log(selectedOption, selectMaterial, selectThickness)
-            console.log(manyThicknesses)
             manyThicknesses.forEach((element) => {
                 if (
                     element.thickness === selectThickness

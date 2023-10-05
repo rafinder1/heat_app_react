@@ -12,7 +12,7 @@ function TypeMaterialDropdown({ selectedOption, typeMaterial, onSelect }) {
                 <Dropdown.Menu style={{ width: '96.5%' }}>
                     {typeMaterial.map((item) => (
                         < Dropdown.Item
-                            key={item.pk}
+                            key={item.type_layer}
                             eventKey={item.type_layer}
                             style={{
                                 display: 'flex',

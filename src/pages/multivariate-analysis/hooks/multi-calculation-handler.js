@@ -8,12 +8,13 @@ export const useMultiCalculationHandlers = (inputTemp, rows, selectedTemp, input
             data_building_partition: rows,
             heat_information: {
                 inside_temperature: null,
-                outside_temperature: selectedTemp, // Use the selected temperature
+                outside_temperature: selectedTemp,
                 inside_heater_power: inputPower,
                 outside_heater_power: null,
             },
             method: 'finite_element_method',
         };
+        console.log(requestData)
         const response = await fetch('http://127.0.0.1:8000/api/multi_variant_calc', {
             method: 'POST',
             headers: {

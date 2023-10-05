@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 function useInputPower() {
-    const [inputPower, setInputPower] = useState(null);
+    const [inputPower, setInputPower] = useState();
 
     const handleInputPower = (event) => {
         const inputValue = event.target.value;

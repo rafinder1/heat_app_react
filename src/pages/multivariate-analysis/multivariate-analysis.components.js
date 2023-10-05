@@ -122,7 +122,7 @@ function MultiAnalysis() {
                 </CardHeader>
                 <Card.Body>
                     <InputField
-                        value={null}
+                        // value={ }
                         onChange={null}
                         placeholder={'Wall Surface'}
                         header={'Wall Surface [m2]'}

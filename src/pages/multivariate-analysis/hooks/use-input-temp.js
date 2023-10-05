@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 function useInputTemp() {
-    const [inputTemp, setInputTemp] = useState(null);
+    const [inputTemp, setInputTemp] = useState();
 
     const handleInputTemp = (event) => {
         const inputValue = event.target.value;
