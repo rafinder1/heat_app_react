@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, Row, Button } from 'react-bootstrap';
-
+import { Table } from 'react-bootstrap';
 import CardHeader from '../../components/card-header';
 import ClimateZoneDropdown from '../../components/climate-zone-dropdown';
 import InputField from '../../components/input-field';
@@ -15,13 +15,16 @@ import Tables from './components/layer-polystyrene-tables';
 import useDropdownSelect from './hooks/use-dropdown-select-CZD';
 import useInputTemp from './hooks/use-input-temp';
 import useInputPower from './hooks/use-input-power';
+import useInputWallSurface from './hooks/use-input-wall-surface';
 import useDataFetchingTypeMaterials from './hooks/use-data-fetching-type-materials';
 import { useMultiAnalysisHandlers } from './hooks/multi-analysis-handlers';
 import { useMultiCalculationHandlers } from './hooks/multi-calculation-handler';
+import useCalculateAmountPrice from './hooks/calculation-amount-price-polystyrene';
 
 
 
 function MultiAnalysis() {
+    const { inputWallSurface, handleInputWallSurface } = useInputWallSurface();
     const { selectedTemp, handleDropdownSelect } = useDropdownSelect();
     const { inputTemp, handleInputTemp } = useInputTemp();
     const { inputPower, handleInputPower } = useInputPower();
@@ -47,6 +50,9 @@ function MultiAnalysis() {
         mvc,
         handleCalculate
     } = useMultiCalculationHandlers(inputTemp, rows, selectedTemp, inputPower);
+
+    const { amountPrice, handleCalculateAmountPrice } = useCalculateAmountPrice();
+    console.log(amountPrice)
 
     return (
         <>
@@ -122,11 +128,36 @@ function MultiAnalysis() {
                 </CardHeader>
                 <Card.Body>
                     <InputField
-                        // value={ }
-                        onChange={null}
+                        value={inputWallSurface}
+                        onChange={handleInputWallSurface}
                         placeholder={'Wall Surface'}
                         header={'Wall Surface [m2]'}
                     />
+                    <Button variant="success" onClick={() => handleCalculateAmountPrice(mvc, inputWallSurface)} style={{ width: '25%', margin: '10px' }}>Calculate</Button>
+                    <Table striped bordered hover variant="light">
+                        <thead>
+                            <tr>
+                                <th>Name Layer</th>
+                                <th>Thickness [m]</th>
+                                <th>Price Building [PLN]</th>
+                                <th>Package [szt.]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {/* {amountPrice.length > 0 ? (
+                                amountPrice.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.name_layer}</td>
+                                        <td>{row.thickness}</td>
+                                        <td>{row.price_building}</td>
+                                        <td>{row.package}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <p>No data to display.</p>
+                            )} */}
+                        </tbody>
+                    </Table>
                 </Card.Body>
             </Card>
         </>

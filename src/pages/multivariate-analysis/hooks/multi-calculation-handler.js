@@ -1,5 +1,6 @@
 import { useState } from 'react';
 export const useMultiCalculationHandlers = (inputTemp, rows, selectedTemp, inputPower) => {
+
     const [mvc, setMVC] = useState(null);
 
     const handleCalculate = async () => {
@@ -14,7 +15,6 @@ export const useMultiCalculationHandlers = (inputTemp, rows, selectedTemp, input
             },
             method: 'finite_element_method',
         };
-        console.log(requestData)
         const response = await fetch('http://127.0.0.1:8000/api/multi_variant_calc', {
             method: 'POST',
             headers: {
@@ -31,7 +31,8 @@ export const useMultiCalculationHandlers = (inputTemp, rows, selectedTemp, input
                     thickness: polystyrene_information.thickness[i],
                     temperatures: polystyrene_information.temperatures[i],
                     thermal_conductivity: polystyrene_information.thermal_conductivity[i],
-                    cost: polystyrene_information.cost[i]
+                    cost: polystyrene_information.cost[i],
+                    package_square_meters: polystyrene_information.package_square_meters[i]
                 });
                 setMVC(rows);
             }
