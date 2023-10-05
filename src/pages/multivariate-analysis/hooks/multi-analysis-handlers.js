@@ -4,7 +4,7 @@ export const useMultiAnalysisHandlers = () => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [materials, setMaterials] = useState();
     const [selectMaterial, setSetelectMaterial] = useState(null);
-    const [thickness, setThickness] = useState();
+    const [manyThicknesses, setManyThickness] = useState();
     const [selectThickness, setSelectThickness] = useState(null);
     const [rows, setRows] = useState([]);
 
@@ -45,7 +45,6 @@ export const useMultiAnalysisHandlers = () => {
 
     const handleThickness = async () => {
         if (materials !== undefined) {
-            let thickness = [];
 
             const response = await fetch(
                 `http://127.0.0.1:8000/api/thickness_material/filter?selected_material=${selectMaterial}`,
@@ -56,40 +55,32 @@ export const useMultiAnalysisHandlers = () => {
                     },
                 }
             );
-            console.log(response)
             if (response.ok) {
-                const var_materials = await response.json();
-
-                console.log(var_materials)
-                // setMaterials(materials);
-
+                const manyThicknesses = await response.json();
+                setManyThickness(manyThicknesses)
             }
-
-            // if (selectMaterial !== null) {
-            //     materials.material.forEach((element) => {
-            //         if (element.fields.name_layer === selectMaterial) {
-            //             thickness.push(element.fields.thickness);
-            //         }
-            //     });
-            // }
-            console.log(11111111111111)
-            console.log(thickness)
-            console.log(11111111111111)
-            thickness.sort();
-            setThickness(thickness);
         }
     };
 
     const handleAddLayer = () => {
         if (selectedOption !== null && selectMaterial !== null && selectThickness !== null) {
-            materials.material.forEach((element) => {
+            console.log(selectedOption, selectMaterial, selectThickness)
+            console.log(manyThicknesses)
+            manyThicknesses.forEach((element) => {
                 if (
-                    element.fields.name_layer === selectMaterial &&
-                    element.fields.thickness === selectThickness
+                    element.thickness === selectThickness
                 ) {
-                    setRows([...rows, element.fields]);
+                    const row = {
+                        type_layer: selectedOption,
+                        name_layer: selectMaterial,
+                        thickness: selectThickness,
+                        thermal_conductivity: element.thermal_conductivity,
+                        cost: element.cost
+
+                    }
+                    setRows([...rows, row])
                 }
-            });
+            })
         }
     };
 
@@ -98,12 +89,11 @@ export const useMultiAnalysisHandlers = () => {
     };
 
 
-
     return {
         selectedOption,
         materials,
         selectMaterial,
-        thickness,
+        manyThicknesses,
         selectThickness,
         rows,
         onSelect,

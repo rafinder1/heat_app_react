@@ -12,15 +12,15 @@ function ThicknessDropdown({ selectThickness, thickness, onSelectThickness, hand
                     {thickness !== undefined && thickness.length > 0 ? (
                         thickness.map((item) => (
                             <Dropdown.Item
-                                key={item}
-                                eventKey={item}
+                                key={item.thickness}
+                                eventKey={item.thickness}
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}
                             >
-                                {item}
+                                {item.thickness}
                             </Dropdown.Item>
                         )
                         )) : (

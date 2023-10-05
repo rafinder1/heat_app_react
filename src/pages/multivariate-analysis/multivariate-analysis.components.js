@@ -31,7 +31,7 @@ function MultiAnalysis() {
         selectedOption,
         materials,
         selectMaterial,
-        thickness,
+        manyThicknesses,
         selectThickness,
         rows,
         onSelect,
@@ -47,7 +47,7 @@ function MultiAnalysis() {
         mvc,
         handleCalculate
     } = useMultiCalculationHandlers(inputTemp, rows, selectedTemp, inputPower);
-    console.log(typeMaterial)
+
     return (
         <>
             <Card>
@@ -97,7 +97,7 @@ function MultiAnalysis() {
                             />
                             <ThicknessDropdown
                                 selectThickness={selectThickness}
-                                thickness={thickness}
+                                thickness={manyThicknesses}
                                 onSelectThickness={onSelectThickness}
                                 handleThickness={handleThickness}
                             />
