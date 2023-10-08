@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, Row, Button } from 'react-bootstrap';
-import { Table } from 'react-bootstrap';
+
 import CardHeader from '../../components/card-header';
 import ClimateZoneDropdown from '../../components/climate-zone-dropdown';
 import InputField from '../../components/input-field';
@@ -11,6 +11,7 @@ import MaterialsDropdown from './components/material-dropdown';
 import ThicknessDropdown from './components/thickness-dropdown';
 import TypeMaterialDropdown from './components/type-material-dropdown';
 import Tables from './components/layer-polystyrene-tables';
+import TableAmountPrice from './components/table-with-amount-price';
 
 import useDropdownSelect from './hooks/use-dropdown-select-CZD';
 import useInputTemp from './hooks/use-input-temp';
@@ -52,7 +53,6 @@ function MultiAnalysis() {
     } = useMultiCalculationHandlers(inputTemp, rows, selectedTemp, inputPower);
 
     const { amountPrice, handleCalculateAmountPrice } = useCalculateAmountPrice();
-    console.log(amountPrice)
 
     return (
         <>
@@ -110,9 +110,39 @@ function MultiAnalysis() {
 
                         </Col>
                         <Col className="d-flex align-items-center justify-content-center">
-                            <Button variant="primary" onClick={handleAddLayer} style={{ width: '25%', margin: '10px' }}>Add Layer</Button >
-                            <Button variant="danger" onClick={handleDelAllRows} style={{ width: '25%', margin: '10px' }}>Del All Layer</Button>
-                            <Button variant="success" onClick={handleCalculate} style={{ width: '25%', margin: '10px' }}>Calculate</Button>
+                            <Button
+                                variant="primary"
+                                onClick={handleAddLayer}
+                                style={{ width: '25%', margin: '10px' }}
+                            >Add Layer
+                            </Button >
+                            <Button
+                                variant="danger"
+                                onClick={handleDelAllRows}
+                                style={{ width: '25%', margin: '10px' }}
+                            >Del All Layer
+                            </Button>
+                            <Button
+                                variant="success"
+                                onClick={() => {
+                                    if (rows.length > 0) {
+                                        handleCalculate()
+                                        if (inputTemp === '') {
+                                            alert('Expected temperature was not defined, a default of 20 °C was assumed');
+                                        }
+                                        if (inputPower === '') {
+                                            alert('Power heater was not defined, a default of 80 W/m2 was assumed');
+                                        }
+                                        if (selectedTemp === null) {
+                                            alert('Climate Zone was not defined, a default of Zone III was assumed');
+                                        }
+                                    } else {
+                                        alert('First Add Layer');
+                                    }
+                                }}
+                                style={{ width: '25%', margin: '10px' }}
+                            >Calculate
+                            </Button>
                         </Col>
                     </Row>
                     <br></br>
@@ -133,31 +163,22 @@ function MultiAnalysis() {
                         placeholder={'Wall Surface'}
                         header={'Wall Surface [m2]'}
                     />
-                    <Button variant="success" onClick={() => handleCalculateAmountPrice(mvc, inputWallSurface)} style={{ width: '25%', margin: '10px' }}>Calculate</Button>
-                    <Table striped bordered hover variant="light">
-                        <thead>
-                            <tr>
-                                <th>Name Layer</th>
-                                <th>Thickness [m]</th>
-                                <th>Price Building [PLN]</th>
-                                <th>Package [szt.]</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {/* {amountPrice.length > 0 ? (
-                                amountPrice.map((row, index) => (
-                                    <tr key={index}>
-                                        <td>{row.name_layer}</td>
-                                        <td>{row.thickness}</td>
-                                        <td>{row.price_building}</td>
-                                        <td>{row.package}</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <p>No data to display.</p>
-                            )} */}
-                        </tbody>
-                    </Table>
+                    <Button
+                        variant="success"
+                        onClick={() => {
+                            if (mvc !== null) {
+                                handleCalculateAmountPrice(mvc, inputWallSurface);
+                            } else {
+                                alert('First count the best Polystyrene');
+                            }
+                        }}
+                        style={{ width: '25%', margin: '10px' }}
+                    >
+                        Calculate
+                    </Button>
+                    <TableAmountPrice
+                        amountPrice={amountPrice}
+                    />
                 </Card.Body>
             </Card>
         </>
