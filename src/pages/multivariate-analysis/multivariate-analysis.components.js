@@ -136,6 +136,11 @@ function MultiAnalysis() {
                                         if (selectedTemp === null) {
                                             alert('Climate Zone was not defined, a default of Zone III was assumed');
                                         }
+                                        if (rows.length === 1) {
+                                            if (rows[0].type_layer === 'ocieplenie') {
+                                                alert('Only Styrofoam was selected, multi-variant analysis is not possible.');
+                                            }
+                                        }
                                     } else {
                                         alert('First Add Layer');
                                     }
@@ -167,7 +172,12 @@ function MultiAnalysis() {
                         variant="success"
                         onClick={() => {
                             if (mvc !== null) {
-                                handleCalculateAmountPrice(mvc, inputWallSurface);
+                                if (inputWallSurface !== '') {
+                                    handleCalculateAmountPrice(mvc, inputWallSurface);
+                                }
+                                else {
+                                    alert('Wall Surface was not defined');
+                                }
                             } else {
                                 alert('First count the best Polystyrene');
                             }
