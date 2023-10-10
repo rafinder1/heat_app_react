@@ -4,7 +4,6 @@ import { Row, Dropdown } from 'react-bootstrap';
 function TypeMaterialDropdown({ selectedOption, typeMaterial, onSelect }) {
     return (
         <Row>
-            <p>Choose Type Material</p>
             <Dropdown onSelect={onSelect} >
                 <Dropdown.Toggle variant="light" style={{ width: '100%', margin: '2.5px' }}>
                     {selectedOption !== null ? `Selected: ${selectedOption} ` : 'Select Layer Type'}

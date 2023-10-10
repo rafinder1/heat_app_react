@@ -137,11 +137,28 @@ const CustomTable = () => {
                             style={{ width: '25%', margin: '10px' }}
                         >Del All Layer
                         </Button>
-                        <Button onClick={handleCalculate} style={{ width: '25%', margin: '10px' }} variant="success">
+                        <Button
+                            onClick={() => {
+                                if (selectedTemp === null) {
+                                    alert('Climate Zone was not defined');
+                                }
+                                else if (inputValue === '') {
+                                    alert('Power heater or Temperature was not defined');
+                                }
+                                else if (rows.length === 0) {
+                                    alert('Layer was not defined');
+                                }
+                                else if (rows.length > 0) {
+                                    handleCalculate()
+                                }
+                            }}
+                            style={{ width: '25%', margin: '10px' }}
+                            variant="success">
                             Calculate
                         </Button>
                     </Col>
                 </Row>
+                <br />
                 <Row>
                     <LayerTable
                         rows={rows}
