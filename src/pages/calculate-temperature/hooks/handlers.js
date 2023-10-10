@@ -3,7 +3,7 @@ import { useState } from 'react';
 const useHandlers = (rows) => {
     const [result, setResult] = useState([]);
     const [selectedTemp, setSelectedZone] = useState(null);
-    const [inputValue, setInputValue] = useState();
+    const [inputValue, setInputValue] = useState('');
     const [selectedHeat, setSelectedHeat] = useState('heat');
 
     const handleCalculate = async () => {

@@ -7,9 +7,9 @@ import InputField from '../../components/input-field';
 
 import { options } from '../../constans/constans';
 
-import MaterialsDropdown from './components/material-dropdown';
-import ThicknessDropdown from './components/thickness-dropdown';
-import TypeMaterialDropdown from './components/type-material-dropdown';
+import MaterialsDropdown from '../../components/material-dropdown';
+import ThicknessDropdown from '../../components/thickness-dropdown';
+import TypeMaterialDropdown from '../../components/type-material-dropdown';
 import Tables from './components/tables';
 import TableAmountPrice from './components/table-with-amount-price';
 
@@ -17,8 +17,8 @@ import useDropdownSelect from './hooks/use-dropdown-select-CZD';
 import useInputTemp from './hooks/use-input-temp';
 import useInputPower from './hooks/use-input-power';
 import useInputWallSurface from './hooks/use-input-wall-surface';
-import useDataFetchingTypeMaterials from './hooks/use-data-fetching-type-materials';
-import { useMultiAnalysisHandlers } from './hooks/multi-analysis-handlers';
+import useDataFetchingTypeMaterials from '../../hooks/use-data-fetching-type-materials';
+import { useMultiAnalysisHandlers } from '../../hooks/multi-analysis-handlers';
 import { useMultiCalculationHandlers } from './hooks/multi-calculation-handler';
 import useCalculateAmountPrice from './hooks/calculation-amount-price-polystyrene';
 

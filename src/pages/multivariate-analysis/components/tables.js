@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import LayerTable from './layer-table';
+import LayerTable from '../../../components/layer-table';
 import PolystyreneTable from './polystyrene-table';
 
 function Tables({ rows, mvc }) {

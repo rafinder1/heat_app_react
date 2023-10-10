@@ -2,20 +2,22 @@ import React from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 
 import CardHeader from '../../components/card-header';
-import ResultPlot from './components/result-plot';
 import InputField from '../../components/input-field';
-import HeatedAreaTable from './components/heated-area-table';
 import ClimateZoneDropdown from '../../components/climate-zone-dropdown';
+import TypeMaterialDropdown from '../../components/type-material-dropdown';
+import MaterialsDropdown from '../../components/material-dropdown';
+import ThicknessDropdown from '../../components/thickness-dropdown';
+import LayerTable from '../../components/layer-table';
+
+import ResultPlot from './components/result-plot';
+import HeatedAreaTable from './components/heated-area-table';
 import BuildingConditionsSection from './components/building-conditions-section';
-import TypeMaterialDropdown from '../multivariate-analysis/components/type-material-dropdown';
-import MaterialsDropdown from '../multivariate-analysis/components/material-dropdown';
-import ThicknessDropdown from '../multivariate-analysis/components/thickness-dropdown';
-import LayerTable from '../multivariate-analysis/components/layer-table';
 
 import { options } from '../../constans/constans';
+import useDataFetchingTypeMaterials from '../../hooks/use-data-fetching-type-materials';
+import { useMultiAnalysisHandlers } from '../../hooks/multi-analysis-handlers';
+
 import useHandlers from './hooks/handlers';
-import useDataFetchingTypeMaterials from '../multivariate-analysis/hooks/use-data-fetching-type-materials';
-import { useMultiAnalysisHandlers } from '../multivariate-analysis/hooks/multi-analysis-handlers';
 
 
 const CustomTable = () => {
