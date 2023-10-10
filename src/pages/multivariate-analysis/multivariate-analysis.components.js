@@ -10,7 +10,7 @@ import { options } from '../../constans/constans';
 import MaterialsDropdown from './components/material-dropdown';
 import ThicknessDropdown from './components/thickness-dropdown';
 import TypeMaterialDropdown from './components/type-material-dropdown';
-import Tables from './components/layer-polystyrene-tables';
+import Tables from './components/tables';
 import TableAmountPrice from './components/table-with-amount-price';
 
 import useDropdownSelect from './hooks/use-dropdown-select-CZD';
@@ -29,7 +29,7 @@ function MultiAnalysis() {
     const { selectedTemp, handleDropdownSelect } = useDropdownSelect();
     const { inputTemp, handleInputTemp } = useInputTemp();
     const { inputPower, handleInputPower } = useInputPower();
-    const typeMaterial = useDataFetchingTypeMaterials()
+    const typeMaterial = useDataFetchingTypeMaterials();
 
     const {
         selectedOption,

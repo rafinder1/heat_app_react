@@ -86,7 +86,6 @@ export const useMultiAnalysisHandlers = () => {
         setRows([]);
     };
 
-
     return {
         selectedOption,
         materials,

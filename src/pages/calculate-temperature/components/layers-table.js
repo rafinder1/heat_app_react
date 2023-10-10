@@ -1,8 +1,8 @@
 import React from 'react';
 import { Table, Form } from 'react-bootstrap';
 
-const LayersTable = ({ rows, handleLayerChange, dropdownOptions }) => (
-    <Table striped bordered hover variant="light">
+const LayersTable = ({ rows, handleLayerChange, dropdownLayers, }) => (
+    < Table striped bordered hover variant="light" >
         <thead>
             <tr>
                 <th>Type Layer</th>
@@ -26,14 +26,27 @@ const LayersTable = ({ rows, handleLayerChange, dropdownOptions }) => (
                             onChange={e => handleLayerChange(index, e.target.value)}
                         >
                             <option value="">Select Layer</option>
-                            {dropdownOptions.map(option => (
+                            {dropdownLayers.map(option => (
                                 <option key={option} value={option}>
                                     {option}
                                 </option>
                             ))}
+
                         </Form.Control>
                     </td>
-                    <td>{row.thickness}</td>
+                    {/* <td><Form.Control
+                        as="select"
+                        value={row.thickness}
+                        onChange={e => handleThickness(index, e.target.value)}
+                    >
+                        <option value="">Select Thickness</option>
+                        {dropdownThickness.map(option => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </Form.Control>
+                    </td> */}
                     <td>{row.thermal_conductivity}</td>
                     <td>{row.cost}</td>
                 </tr>
@@ -42,7 +55,7 @@ const LayersTable = ({ rows, handleLayerChange, dropdownOptions }) => (
                 <td colSpan={5}>Outer Wall</td>
             </tr>
         </tbody>
-    </Table>
+    </Table >
 );
 
 export default LayersTable;

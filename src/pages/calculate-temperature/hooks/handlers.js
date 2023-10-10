@@ -1,41 +1,18 @@
 import { useState } from 'react';
 
-const useHandlers = (data) => {
-    const [rows, setRows] = useState([]);
+const useHandlers = (rows) => {
     const [result, setResult] = useState([]);
     const [selectedTemp, setSelectedZone] = useState(null);
     const [inputValue, setInputValue] = useState();
-    const [selectedOption, setSelectedOption] = useState('heat');
-    const [todoList, setTodoList] = useState([
-        "Select a Climate Zone",
-        "Select Heater or Temperature",
-        "Add Layer"
-    ]);
-
-    const handleLayerChange = (index, selectedLayer) => {
-        const newRows = [...rows];
-        newRows[index].name_layer = selectedLayer;
-
-        // Fetch corresponding data from JSON and update the row
-        const matchingData = data.find(item => item.name_layer === selectedLayer);
-
-        if (matchingData) {
-            newRows[index].type_layer = matchingData.type_layer;
-            newRows[index].thickness = matchingData.thickness;
-            newRows[index].thermal_conductivity = matchingData.thermal_conductivity;
-            newRows[index].cost = matchingData.cost;
-        }
-
-        setRows(newRows);
-    };
+    const [selectedHeat, setSelectedHeat] = useState('heat');
 
     const handleCalculate = async () => {
         const requestData = {
             data_building_partition: rows,
             heat_information: {
-                inside_temperature: selectedOption === 'heat' ? null : inputValue,
-                outside_temperature: selectedTemp, // Use the selected temperature
-                inside_heater_power: selectedOption === 'heat' ? inputValue : null,
+                inside_temperature: selectedHeat === 'heat' ? null : inputValue,
+                outside_temperature: selectedTemp,
+                inside_heater_power: selectedHeat === 'heat' ? inputValue : null,
                 outside_heater_power: null,
             },
             method: 'finite_element_method',
@@ -51,11 +28,9 @@ const useHandlers = (data) => {
         })
         if (response.ok) {
             const temp = await response.json();
-            // Handle the calculated result (update UI or show a message)
 
             setResult(temp);
         } else {
-            // Handle error response
             const result = "Handle error response"
             setResult(result)
         }
@@ -63,17 +38,14 @@ const useHandlers = (data) => {
 
     const handleDropdownSelect = (eventKey) => {
 
-        const selectedTemperature = parseInt(eventKey.split(': ')[1]); // Extract temperature from "Temperature: -16°C"
+        const selectedTemperature = parseInt(eventKey.split(': ')[1]);
 
         setSelectedZone(selectedTemperature);
-
-        const updatedList = todoList.filter(item => item !== "Select a Climate Zone");
-        setTodoList(updatedList);
     };
 
 
     const handleRadioChange = (value) => {
-        setSelectedOption(value);
+        setSelectedHeat(value);
         setInputValue('');
     };
 
@@ -85,47 +57,23 @@ const useHandlers = (data) => {
 
             if (!isNaN(parsedValue)) {
                 setInputValue(parsedValue);
-
-                // If inputValue is a valid number (not NaN), remove "Select Heater or Temperature" from the todo list
-                const updatedList = todoList.filter(item => item !== "Select Heater or Temperature");
-                setTodoList(updatedList);
             } else {
-                // If inputValue cannot be parsed as a valid number, keep "Select Heater or Temperature" in the todo list
                 setInputValue('');
-                if (!todoList.includes("Select Heater or Temperature")) {
-                    setTodoList([...todoList, "Select Heater or Temperature"]);
-                }
             }
         } else {
-            // If inputValue is empty, keep "Select Heater or Temperature" in the todo list
             setInputValue('');
-            if (!todoList.includes("Select Heater or Temperature")) {
-                setTodoList([...todoList, "Select Heater or Temperature"]);
-            }
         }
     };
 
-    const addRowWithDropdown = (name_layer) => {
-        setRows([...rows, { type_layer: '', name_layer: '', thickness: '', thermal_conductivity: '', cost: '' }]);
-
-        const updatedList = todoList.filter(item => item !== "Add Layer");
-        setTodoList(updatedList);
-    };
-
     return {
-        rows,
         result,
         selectedTemp,
         inputValue,
-        selectedOption,
-        todoList,
-        handleLayerChange,
-        handleCalculate,
+        selectedHeat,
         handleDropdownSelect,
         handleRadioChange,
         handleInputChange,
-        addRowWithDropdown
-
+        handleCalculate
     };
 };
 
