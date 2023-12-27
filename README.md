@@ -1,8 +1,8 @@
-# Getting Started with Create React App
+# HEATER FRONTEND
+
+The Heater Frontend project has been developed as part of a master's thesis in sustainable construction at the Military University of Technology in Warsaw.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
 
 In the project directory, you can run:
 
@@ -11,60 +11,32 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Overview
 
-### `npm test`
+This React-based frontend application is designed to provide two distinct modules for temperature calculation and cost optimization of walls. The application interfaces with a Django backend, which handles requests and supplies the necessary data. The backend repository can be found [here](https://github.com/rafinder1/heater-backend-django).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![image](https://github.com/rafinder1/heater-frontend-react/assets/102503112/925a1299-6d29-429d-840d-c2cca70668d9)
 
-### `npm run build`
+### Module 1: Temperature Calculation in Walls
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+To initiate temperature calculations, users must input essential information, including climatic zone, boundary condition, heating element power, room surface area, material type, material category, and thickness. Upon providing accurate data, the application generates a graphical representation illustrating the temperature distribution within the wall.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+![image](https://github.com/rafinder1/heater-frontend-react/assets/102503112/5c5503f4-aa1c-485e-b10d-7ba0a72303f8)
+![image](https://github.com/rafinder1/heater-frontend-react/assets/102503112/cc5990a7-7154-42f9-8316-949e9d14cb42)
+![image](https://github.com/rafinder1/heater-frontend-react/assets/102503112/554f6b0d-fd0d-4278-8d27-94a44b5d0d13)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+### Module 2: Wall Cost Optimization
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+For cost optimization calculations, users need to input details such as climatic zone, desired temperature, heating element power, and room surface area. The wall layers are selected from drop-down lists similar to Module 1. After inputting the required data, the application generates a table proposing types of insulation that best suit the wall, taking into account both performance and cost considerations.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![image](https://github.com/rafinder1/heater-frontend-react/assets/102503112/1e0fe0c1-2bb1-42df-84c0-82d4a8601a9a)
+![image](https://github.com/rafinder1/heater-frontend-react/assets/102503112/08ea5e93-bf3b-4613-b82a-08652b3e94b5)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Add-on: Styrofoam Cost Calculation
 
-## Learn More
+An additional feature in Module 2 allows users to estimate the cost and quantity of styrofoam required based on the wall's surface area.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![image](https://github.com/rafinder1/heater-frontend-react/assets/102503112/59d80baf-6996-45fa-9f53-dd9559d092b0)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
